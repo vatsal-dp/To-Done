@@ -99,7 +99,7 @@ class TestViews(TestCase):
             tag_color="#f9f9f9",
             due_date=timezone.now(),
             list=todo,
-            is_done=False,
+            is_done=True,
         )
         post = request.POST.copy()  # to make it mutable
         post['todo'] = 1
