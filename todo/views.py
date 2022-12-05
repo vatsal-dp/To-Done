@@ -421,7 +421,7 @@ def createNewTodoList(request):
             'user_not_found': user_not_found,
         }
         # return HttpResponse("Success!")
-        return redirect("/todo")
+        return redirect("index")
     else:
         return HttpResponse("Request method is not a Post")
 
