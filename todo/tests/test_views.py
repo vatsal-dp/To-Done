@@ -152,6 +152,7 @@ class TestViews(TestCase):
             is_done=False,
         )
 
+        request.method = "POST"
         post = request.POST.copy()
         post['list_item_id'] = 1
         response = removeListItem(request)
