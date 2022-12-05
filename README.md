@@ -3,7 +3,7 @@
 </p>
 <h2 align="center">The Only Todo List You Need</h2>
 
-[![Build Status](https://img.shields.io/github/workflow/status/shahleon/smart-todo/Django%20CI/main)](https://github.com/shahleon/smart-todo/actions/workflows/django.yml)
+[![Build Status](https://github.com/Chloe-Ku/smart-todo/actions/workflows/django.yml/badge.svg)](https://github.com/Chloe-Ku/smart-todo/actions/workflows/django.yml)
 [![Coverage Status](https://coveralls.io/repos/github/shahleon/smart-todo/badge.svg?branch=main)](https://coveralls.io/github/shahleon/smart-todo?branch=main)
 [![license badge](https://img.shields.io/badge/License-MIT-green.svg)](https://github.com/Chloe-Ku/smart-todo/blob/main/LICENSE)
 [![issues badge](https://img.shields.io/github/issues/shahleon/smart-todo)](https://github.com/shahleon/smart-todo/issues)
