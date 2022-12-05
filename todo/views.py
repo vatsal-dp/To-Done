@@ -420,8 +420,8 @@ def createNewTodoList(request):
         context = {
             'user_not_found': user_not_found,
         }
-        # return HttpResponse("Success!")
-        return redirect("index")
+        return HttpResponse("Success!")
+        # return redirect("index")
     else:
         return HttpResponse("Request method is not a Post")
 
