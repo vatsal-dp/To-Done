@@ -275,14 +275,11 @@ def getListTagsByUserid(request):
     if not request.user.is_authenticated:
         return redirect("/login")
     if request.method == 'POST':
-        body_unicode = request.body.decode('utf-8')
-        body = json.loads(body_unicode)
-
         try:
             with transaction.atomic():
                 user_id = request.user.id
-                list_tag_list = ListTags.objects.filter(user_id=user_id)
-                return JsonResponse({'list_tag_list': list_tag_list})
+                list_tag_list = ListTags.objects.filter(user_id=user_id).values()
+                return JsonResponse({'list_tag_list': list(list_tag_list)})
         except IntegrityError:
             print("query list tag by user_id = " + str(user_id) + " failed!")
             JsonResponse({})
