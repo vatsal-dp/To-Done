@@ -21,7 +21,6 @@ class TestViews(TestCase):
         post['todo'] = 1
         print(request)
         request.POST = post
-        request.method = "POST"
         response = login_request(request)
         self.assertEqual(response.status_code, 200)
 
