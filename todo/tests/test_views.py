@@ -3,7 +3,7 @@ from django.test import TestCase, Client, RequestFactory
 from django.contrib.auth.models import User
 from todo.views import login_request, template_from_todo, template, delete_todo, index, getListTagsByUserid
 from django.utils import timezone
-from todo.models import List, ListItem, Template, TemplateItem
+from todo.models import List, ListItem, Template, TemplateItem, ListTags
 
 
 class TestViews(TestCase):
@@ -20,7 +20,7 @@ class TestViews(TestCase):
         post = request.POST.copy()  # to make it mutable
         post['todo'] = 1
         print(request)
-        request.POST = "POST"
+        request.POST = post
         response = login_request(request)
         self.assertEqual(response.status_code, 200)
 
@@ -53,15 +53,23 @@ class TestViews(TestCase):
         request.POST = post
         response = delete_todo(request)
         self.assertEqual(response.status_code, 302)
-        
+
     def test_getListTagsByUserid(self):
         request = self.factory.get('/todo/')
         request.user = self.user
+        ListTags.objects.create(
+            user_id_id = self.user.id,
+            tag_name = 'test',
+            created_on = timezone.now()
+        )
         post = request.POST.copy()
         post['todo'] = 1
         request.POST = post
+        request.method = "POST"
         response = getListTagsByUserid(request)
-        self.assertEqual(response.status_code, 200)
+        print('response:')
+        print(response)
+        self.assertIsNotNone(response)
 
     def test_index(self):
         request = self.factory.get('/todo/')
