@@ -20,7 +20,7 @@ class TestViews(TestCase):
         post = request.POST.copy()  # to make it mutable
         post['todo'] = 1
         print(request)
-        request.POST = post
+        request.POST = "POST"
         response = login_request(request)
         self.assertEqual(response.status_code, 200)
 
