@@ -81,7 +81,7 @@ We wanted to work on something that is:
  * Point your browser at http://127.0.0.1:8080 and explore the app
 
 ### Documentation
-[See this page](https://shahleon.github.io/smart-todo/)
+[See this page](https://chloe-ku.github.io/smart-todo/)
 
 ### Features
 
