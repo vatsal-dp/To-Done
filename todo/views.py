@@ -169,10 +169,9 @@ def removeListItem(request):
         except IntegrityError as e:
             print(str(e))
             print("unknown error occurs when trying to update todo list item text")
-        return redirect("index")
+        return redirect("/todo")
     else:
-        return redirect("index")
-
+        return redirect("/todo")
 
 # Update a to-do list item, called by javascript function
 @csrf_exempt
