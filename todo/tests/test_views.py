@@ -153,7 +153,7 @@ class TestViews(TestCase):
         )
 
         request.method = "POST"
-        post = request.POST.copy()
+#         post = request.POST.copy()
         post['list_item_id'] = 1
         response = removeListItem(request)
         print(response)
