@@ -17,7 +17,7 @@
 you can access your todolist on the go. Use our rich library of templates to create a new todo list very fast or create your own.
 
 ### Watch this video to know more about TO-DONE 2.0
-<img src="img/todone-all.gif" width="800" height="500" />
+https://github.com/Chloe-Ku/smart-todo/blob/main/img/todone-all.mp4
 
 ### Watch this video to know more about the original TO-DONE 
 <img src="img/todone-create-list.gif" width="800" height="500" />
