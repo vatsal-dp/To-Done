@@ -23,7 +23,7 @@ https://user-images.githubusercontent.com/23623764/205810552-556e0449-3f81-4e55-
 
 
 ### Watch this video to know more about the original TO-DONE 
-<img src="img/todone-create-list.gif" width="800" height="500" />
+<img src="img/todone-create-list.gif" width="1200" height="500" />
 
 Contents
 ========
