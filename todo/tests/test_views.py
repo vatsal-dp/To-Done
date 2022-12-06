@@ -192,6 +192,6 @@ class TestViews(TestCase):
             }
         
         request._body = json.dumps(param).encode('utf-8')
-        request.method = "POST"
+        # request.method = "POST"
         response = addNewListItem(request)
         self.assertIsNotNone(response)
