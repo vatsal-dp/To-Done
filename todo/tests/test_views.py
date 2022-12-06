@@ -222,13 +222,13 @@ class TestViews(TestCase):
         request.method = "POST"
         response = updateListItem(request, item.id)
         self.assertEqual(response.status_code, 302)
-
-     def test_register_request(self):
-         request = self.factory.get('/todo/')
-         form_data = { 'email': '123@123.com', 'username': '123', 'password1': 'K!35EGL&g7#U', 'password2': 'K!35EGL&g7#U'}
-         request.POST = form_data
-         response = register_request(request)
-         self.assertIsNotNone(response)
+        
+    def test_register_request(self):
+        request = self.factory.get('/todo/')
+        form_data = { 'email': '123@123.com', 'username': '123', 'password1': 'K!35EGL&g7#U', 'password2': 'K!35EGL&g7#U'}
+        request.POST = form_data
+        response = register_request(request)
+        self.assertIsNotNone(response)
         
     def test_createNewTodoList(self):
         test_data = {'list_name' : 'test',
