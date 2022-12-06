@@ -111,7 +111,7 @@ We wanted to work on something that is:
 </p>
 
 ### New Features
-#### Customizable Grouping Tags
+#### Customizable
 <p float="middle">
     <img src="img/todone-tag-list.gif" width="500" height="250" />
 </p>
