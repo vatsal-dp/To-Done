@@ -49,7 +49,7 @@ We wanted to work on something that is:
  * [Create Your Own Templates](#templates)
 
 ### New Features
-* [Shared List]
+* [Shared List](#customizable)
 * [Add Due Date To Tasks]
 * [Due Date Alerting Mechanism]
 * [Add Reminder Message to completed]
