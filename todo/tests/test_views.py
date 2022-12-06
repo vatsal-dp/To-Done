@@ -1,7 +1,7 @@
 from django.urls import reverse
 from django.test import TestCase, Client, RequestFactory
 from django.contrib.auth.models import User
-from todo.views import login_request, template_from_todo, template, delete_todo, index, getListTagsByUserid, removeListItem, addNewListItem, updateListItem, createNewTodoList, register_request, getListItemByName, getListItemById
+from todo.views import login_request, template_from_todo, template, delete_todo, index, getListTagsByUserid, removeListItem, addNewListItem, updateListItem, createNewTodoList, register_request, getListItemByName, getListItemById, markListItem
 from django.utils import timezone
 from todo.models import List, ListItem, Template, TemplateItem, ListTags
 from todo.forms import NewUserForm
@@ -296,5 +296,41 @@ class TestViews(TestCase):
                                 content_type="application/json")
         request.user = self.user
         temp = getListItemById(request)
+        response = index(request)
+        self.assertEqual(response.status_code, 200)
+        
+    def test_markListItem(self):
+        todo = List.objects.create(
+            title_text="test list",
+            created_on=timezone.now(),
+            updated_on=timezone.now(),
+            user_id_id=self.user.id,
+        )
+
+        listItem = ListItem.objects.create(
+            item_name="test item",
+            item_text="This is a test item on a test list",
+            created_on=timezone.now(),
+            finished_on=timezone.now(),
+            tag_color="#f9f9f9",
+            due_date=timezone.now(),
+            list=todo,
+            is_done=False,
+        )
+
+        params = { 
+            'list_id': todo.id,
+            'list_item_name': listItem.item_name, 
+            "create_on": 1670292391,
+            "due_date": "2023-01-01",
+            "finish_on": 1670292392,
+            "is_done": True,
+            "list_item_id": listItem.id,
+            }
+
+        request = self.factory.post(f'/todo/', data=params, 
+                                content_type="application/json")
+        request.user = self.user
+        temp = markListItem(request)
         response = index(request)
         self.assertEqual(response.status_code, 200)
