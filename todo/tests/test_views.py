@@ -1,7 +1,7 @@
 from django.urls import reverse
 from django.test import TestCase, Client, RequestFactory
 from django.contrib.auth.models import User
-from todo.views import login_request, template_from_todo, template, delete_todo, index, getListTagsByUserid, removeListItem
+from todo.views import login_request, template_from_todo, template, delete_todo, index, getListTagsByUserid, removeListItem, addNewListItem
 from django.utils import timezone
 from todo.models import List, ListItem, Template, TemplateItem, ListTags
 from todo.forms import NewUserForm
@@ -167,3 +167,27 @@ class TestViews(TestCase):
         form_data = { 'email': '123@123.com', 'username': '123', 'password1': 'K!35EGL&g7#U', 'password2': 'K!35EGL&g7#U'}
         form = NewUserForm(form_data)
         self.assertTrue(form.is_valid())
+        
+    def test_addNewListItem(self):
+        request = self.factory.get('/todo')
+        request.user = self.user
+
+        todo = List.objects.create(
+        title_text="test list",
+        created_on=timezone.now(),
+        updated_on=timezone.now(),
+        user_id_id=self.user.id,
+        )
+
+        param = { 
+            "list_id": 1, 
+            "list_item_name": "random", 
+            "create_on": str(timezone.now()), 
+            "finished_on": str(timezone.now()),
+            "due_date": str(timezone.now()),
+            "tag_color": "#f9f9f9",
+            "item_text": "",
+            "is_done": False}
+        request._body = json.dumps(param).encode('utf-8')
+        response = addNewListItem(request)
+        self.assertIsNotNone(response)
