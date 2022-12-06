@@ -397,3 +397,14 @@ class TestViews(TestCase):
         request.method = "POST"
         response = todo_from_template(request)
         self.assertEqual(response.status_code, 302)
+
+    def test_login_request(self):
+        test_data = {'username' : 'jacob',
+                     'password' : 'top_secret'}
+        request = self.factory.post(f'/login/', data=test_data, 
+                                content_type="application/json")
+        request.user = self.user
+        setattr(request, 'session', 'session')
+        setattr(request, '_messages', FallbackStorage(request))
+        response = login_request(request)
+        self.assertEqual(response.status_code, 200)
