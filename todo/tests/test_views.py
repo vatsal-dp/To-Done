@@ -178,16 +178,16 @@ class TestViews(TestCase):
         updated_on=timezone.now(),
         user_id_id=self.user.id,
         )
-
         param = { 
             "list_id": 1, 
             "list_item_name": "random", 
-            "create_on": str(timezone.now()), 
-            "finished_on": str(timezone.now()),
-            "due_date": str(timezone.now()),
+            "create_on": timezone.now(),
+            "finished_on": timezone.now(),
+            "due_date": timezone.now(),
             "tag_color": "#f9f9f9",
             "item_text": "",
-            "is_done": False}
+            "is_done": False
+            }
         request._body = json.dumps(param).encode('utf-8')
         request.method = "POST"
         response = addNewListItem(request)
