@@ -4,6 +4,7 @@ from django.contrib.auth.models import User
 from todo.views import login_request, template_from_todo, template, delete_todo, index, getListTagsByUserid, removeListItem
 from django.utils import timezone
 from todo.models import List, ListItem, Template, TemplateItem, ListTags
+import json
 
 
 class TestViews(TestCase):
@@ -152,9 +153,10 @@ class TestViews(TestCase):
             is_done=False,
         )
 
-#         request.method = "POST"
         post = request.POST.copy()
-        post['list_item_id'] = 1
+        # post['list_item_id'] = 1
+        request.POST = "POST"
+        request._body = json.dumps({ "list_item_id": 1 }).encode('utf-8')
         response = removeListItem(request)
         print(response)
-        self.assertIsNotNone(response)        
+        self.assertIsNotNone(response)     
