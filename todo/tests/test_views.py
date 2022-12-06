@@ -169,8 +169,6 @@ class TestViews(TestCase):
         self.assertTrue(form.is_valid())
         
     def test_addNewListItem(self):
-        request = self.factory.get('/todo')
-        request.user = self.user
 
         todo = List.objects.create(
         title_text="test list",
@@ -178,23 +176,27 @@ class TestViews(TestCase):
         updated_on=timezone.now(),
         user_id_id=self.user.id,
         )
-        
-        timestamp = 1670291946.288
-        param = { 
-            "list_id": 1, 
-            "list_item_name": "random", 
-            "create_on": timestamp,
-            "finished_on": timestamp,
-            "due_date": timestamp,
+
+        params = { 
+            'list_id': todo.id,
+            'list_item_name': "random", 
+            "create_on": 1670292391,
+            "due_date": "2023-01-01",
             "tag_color": "#f9f9f9",
             "item_text": "",
             "is_done": False
             }
-        
-        request._body = json.dumps(param).encode('utf-8')
+
+        request = self.factory.post(f'/todo/', data=params, 
+                                content_type="application/json")
+        request.user = self.user
         # request.method = "POST"
-        response = addNewListItem(request)
-        self.assertIsNotNone(response)
+        print(type(params))
+        # param = json.dumps(param,cls=DateTimeEncoder)
+        # request._body = json.dumps(params, separators=(',', ':')).encode('utf-8')
+        temp = addNewListItem(request)
+        response = index(request)
+        self.assertEqual(response.status_code, 200)
         
     def test_updateListItem(self):
         request = self.factory.get('/todo/')
