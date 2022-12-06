@@ -1,7 +1,7 @@
 from django.urls import reverse
 from django.test import TestCase, Client, RequestFactory
 from django.contrib.auth.models import User
-from todo.views import login_request, template_from_todo, template, delete_todo, index, getListTagsByUserid, removeListItem, addNewListItem, updateListItem, createNewTodoList, register_request
+from todo.views import login_request, template_from_todo, template, delete_todo, index, getListTagsByUserid, removeListItem, addNewListItem, updateListItem, createNewTodoList, register_request, getListItemByName
 from django.utils import timezone
 from todo.models import List, ListItem, Template, TemplateItem, ListTags
 from todo.forms import NewUserForm
@@ -242,3 +242,28 @@ class TestViews(TestCase):
         temp = createNewTodoList(request)
         response = index(request)
         self.assertEqual(response.status_code, 200)
+        
+    def test_getListItemByName(self):
+        request = self.factory.get('/todo/')
+        request.user = self.user
+        todo = List.objects.create(
+            title_text="test list",
+            created_on=timezone.now(),
+            updated_on=timezone.now(),
+            user_id_id=self.user.id,
+        )
+        ListItem.objects.create(
+            item_name="test item",
+            item_text="This is a test item on a test list",
+            created_on=timezone.now(),
+            finished_on=timezone.now(),
+            tag_color="#f9f9f9",
+            due_date=timezone.now(),
+            list=todo,
+            is_done=False,
+        )
+        post = request.POST.copy()
+        post['todo'] = 1
+        request.POST = post
+        response = getListItemByName(request)
+        self.assertIsNotNone(response)
