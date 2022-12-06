@@ -155,7 +155,7 @@ class TestViews(TestCase):
 
         post = request.POST.copy()
         # post['list_item_id'] = 1
-        request.POST = "POST"
+        request.method = "POST"
         request._body = json.dumps({ "list_item_id": 1 }).encode('utf-8')
         response = removeListItem(request)
         print(response)
