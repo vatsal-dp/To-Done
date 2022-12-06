@@ -115,6 +115,9 @@ We wanted to work on something that is:
 </p>
 
 #### Shared To-Do Lists
+<p float="middle">
+    <img src="img/todone-shared-list.gif" width="500" height="250" />
+</p>
 
 #### Due Date (with alerting mechnism) + Color Tags
 <p float="middle">
