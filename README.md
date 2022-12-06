@@ -50,7 +50,7 @@ We wanted to work on something that is:
 
 ### New Features
 * [Shared List]
-* [Add Due Date To Tasks] (#customizable-grouping-tags)
+* [Add Due Date To Tasks]
 * [Due Date Alerting Mechanism]
 * [Add Reminder Message to completed]
 * [Customized Color Tag]
