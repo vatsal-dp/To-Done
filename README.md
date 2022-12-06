@@ -50,7 +50,7 @@ We wanted to work on something that is:
 
 ### New Features
 * [Shared List]
-* [Add Due Date To Tasks]
+* [Add Due Date To Tasks] (#customizable-grouping-tags)
 * [Due Date Alerting Mechanism]
 * [Add Reminder Message to completed]
 * [Customized Color Tag]
@@ -113,6 +113,8 @@ We wanted to work on something that is:
 <p float="middle">
     <img src="img/todone-tag-list.gif" width="500" height="250" />
 </p>
+
+#### Shared To-Do Lists
 
 #### Due Date (with alerting mechnism) + Color Tags
 <p float="middle">
