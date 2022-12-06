@@ -3,7 +3,7 @@ from django.test import TestCase, Client, RequestFactory
 from django.contrib.auth.models import User
 from todo.views import login_request, template_from_todo, template, delete_todo, index, getListTagsByUserid, removeListItem, addNewListItem, updateListItem, createNewTodoList, register_request, getListItemByName, getListItemById, markListItem
 from django.utils import timezone
-from todo.models import List, ListItem, Template, TemplateItem, ListTags
+from todo.models import List, ListItem, Template, TemplateItem, ListTags, SharedList
 from todo.forms import NewUserForm
 from django.contrib.messages.storage.fallback import FallbackStorage
 
@@ -336,5 +336,38 @@ class TestViews(TestCase):
                                 content_type="application/json")
         request.user = self.user
         temp = markListItem(request)
+        response = index(request)
+        self.assertEqual(response.status_code, 200)
+    
+    def test_createNewTodoList2(self):
+        test_data = {'list_name' : 'test',
+                     'create_on' : 1670292391,
+                     'list_tag' : 'test_tag',
+                     'shared_user' : 'someone',
+                     'create_new_tag' : True}
+        request = self.factory.post(f'/todo/', data=test_data, 
+                                content_type="application/json")
+        request.user = self.user
+        temp = createNewTodoList(request)
+        response = index(request)
+        self.assertEqual(response.status_code, 200)
+    
+    def test_createNewTodoList3(self):
+        sharedUser = User.objects.create_user(
+            username='share', email='share@…', password='top_secret')
+        sharedList = SharedList.objects.create(
+            user = sharedUser,
+            shared_list_id = ""
+        )
+        
+        test_data = {'list_name' : 'test',
+                     'create_on' : 1670292391,
+                     'list_tag' : 'test_tag',
+                     'shared_user' : 'share',
+                     'create_new_tag' : True}
+        request = self.factory.post(f'/todo/', data=test_data, 
+                                content_type="application/json")
+        request.user = self.user
+        temp = createNewTodoList(request)
         response = index(request)
         self.assertEqual(response.status_code, 200)
