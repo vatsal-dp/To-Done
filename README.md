@@ -4,12 +4,12 @@
 <h2 align="center">The Only Todo List You Need</h2>
 
 [![Build Status](https://github.com/Chloe-Ku/smart-todo/actions/workflows/django.yml/badge.svg)](https://github.com/Chloe-Ku/smart-todo/actions/workflows/django.yml)
-[![Coverage Status](https://coveralls.io/repos/github/Chloe-Ku/smart-todo/badge.svg)](https://coveralls.io/github/Chloe-Ku/smart-todo)
+[![Coverage Status](https://coveralls.io/repos/github/Chloe-Ku/smart-todo/badge.svg?branch=main)](https://coveralls.io/github/Chloe-Ku/smart-todo?branch=main)
 [![license badge](https://img.shields.io/badge/License-MIT-green.svg)](https://github.com/Chloe-Ku/smart-todo/blob/main/LICENSE)
 [![issues badge](https://img.shields.io/github/issues/Chloe-Ku/smart-todo)](https://github.com/Chloe-Ku/smart-todo/issues)
 [![Python 3.8](https://img.shields.io/badge/python-3.8-blue.svg)](https://www.python.org/downloads/release/python-380/)
 [![Django 4.1](https://img.shields.io/badge/django-4.1-blue.svg)](https://docs.djangoproject.com/en/4.1/releases/4.1/)
-[![DOI](https://zenodo.org/badge/567592206.svg)](https://zenodo.org/badge/latestdoi/567592206)
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.7155415.svg)](https://doi.org/10.5281/zenodo.7155415)
 
 # TO-DONE
 
@@ -50,7 +50,7 @@ We wanted to work on something that is:
  * [Create Your Own Templates](#templates)
 
 ### New Features
-* [Shared List](#customizable)
+* [Shared List](#customizable-grouping-tags)
 * [Add Due Date To Tasks]
 * [Due Date Alerting Mechanism]
 * [Add Reminder Message to completed]
@@ -110,7 +110,7 @@ We wanted to work on something that is:
 </p>
 
 ### New Features
-#### Customizable
+#### Customizable Grouping Tags
 <p float="middle">
     <img src="img/todone-tag-list.gif" width="500" height="250" />
 </p>
