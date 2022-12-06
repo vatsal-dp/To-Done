@@ -29,7 +29,8 @@ Contents
 ========
 
  * [Why?](#why)
- * [Features](#key-features)
+ * [Features](#key-features-last-version)
+ * [New Features](#new-feature)
  * [Upcoming Features](#upcoming-features)
  * [Quick Start](#quick-start)
  * [Documentation](#Documentation)
