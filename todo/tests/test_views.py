@@ -228,11 +228,22 @@ class TestViews(TestCase):
         self.assertEqual(response.status_code, 302)
         
     def test_register_request(self):
-        form_data = { 'email': '123@123.com', 'username': '123', 'password1': 'K!35EGL&g7#U', 'password2': 'K!35EGL&g7#U'}
+        form_data = { 
+            'csrfmiddlewaretoken': 'pC5esKogMqppX7meHDl1cXVd9oeEaIrL9GC3C9P1x2QABQZrqxmq8Anv818nto9B',
+            'email': '456@123.com', 
+            'username': '456', 
+            'password1': 'K!35EGL&g7#U', 
+            'password2': 'K!35EGL&g7#U'
+            }
+        print(type(form_data))
+        # query_dict = QueryDict('', mutable=True)
+        # query_dict.update(form_data)
         request = self.factory.post(f'/todo/', data=form_data, content_type="application/json")
         setattr(request, 'session', 'session')
         messages = FallbackStorage(request)
         setattr(request, '_messages', messages)
+        # print(query_dict)
+        request.POST = form_data
         response = register_request(request)
         self.assertIsNotNone(response)
         
