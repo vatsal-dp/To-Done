@@ -29,7 +29,7 @@ Contents
  * [Documentation](#Documentation)
  * [Want to contribute?](#want-to-contribute)
  * [License](#license)
- * [Developer](#developers)
+ * [Developer](#developers-new-version)
 
 ### Why?
 
