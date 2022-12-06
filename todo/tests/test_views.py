@@ -5,6 +5,8 @@ from todo.views import login_request, template_from_todo, template, delete_todo,
 from django.utils import timezone
 from todo.models import List, ListItem, Template, TemplateItem, ListTags
 from todo.forms import NewUserForm
+from django.contrib.messages.storage.fallback import FallbackStorage
+
 import json
 
 
@@ -226,9 +228,11 @@ class TestViews(TestCase):
         self.assertEqual(response.status_code, 302)
         
     def test_register_request(self):
-        request = self.factory.get('/todo/')
         form_data = { 'email': '123@123.com', 'username': '123', 'password1': 'K!35EGL&g7#U', 'password2': 'K!35EGL&g7#U'}
-        request.POST = form_data
+        request = self.factory.post(f'/todo/', data=form_data, content_type="application/json")
+        setattr(request, 'session', 'session')
+        messages = FallbackStorage(request)
+        setattr(request, '_messages', messages)
         response = register_request(request)
         self.assertIsNotNone(response)
         
