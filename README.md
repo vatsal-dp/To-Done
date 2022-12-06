@@ -30,7 +30,7 @@ Contents
 
  * [Why?](#why)
  * [Features](#key-features-last-version)
- * [New Features](#new-feature)
+ * [New Features](#new-features)
  * [Upcoming Features](#upcoming-features)
  * [Quick Start](#quick-start)
  * [Documentation](#Documentation)
