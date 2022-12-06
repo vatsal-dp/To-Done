@@ -181,9 +181,9 @@ class TestViews(TestCase):
         param = { 
             "list_id": 1, 
             "list_item_name": "random", 
-            "create_on": timezone.now(),
-            "finished_on": timezone.now(),
-            "due_date": timezone.now(),
+            "create_on": str(timezone.now()),
+            "finished_on": str(timezone.now()),
+            "due_date": str(timezone.now()),
             "tag_color": "#f9f9f9",
             "item_text": "",
             "is_done": False
