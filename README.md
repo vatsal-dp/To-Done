@@ -50,12 +50,12 @@ We wanted to work on something that is:
  * [Create Your Own Templates](#templates)
 
 ### New Features
-* [Shared List](#customizable-grouping-tags)
-* [Add Due Date To Tasks]
-* [Due Date Alerting Mechanism]
-* [Add Reminder Message to completed]
-* [Customized Color Tag]
-* [Add Tags To Todo Lists For Customizable Grouping]
+* [Shared List](#shared-todo-lists)
+* [Add Due Date To Tasks](#due-date-color-tags)
+* [Due Date Alerting Mechanism](#due-date-color-tags)
+* [Add Reminder Message to task completed](#due-date-color-tags)
+* [Customized Color Tag](#due-date-color-tags)
+* [Add Tags To Todo Lists For Customizable Grouping](#customizable-grouping-tags)
 
 ### Upcoming Features
  * Social login
@@ -115,12 +115,12 @@ We wanted to work on something that is:
     <img src="img/todone-tag-list.gif" width="500" height="250" />
 </p>
 
-#### Shared To-Do Lists
+#### Shared ToDo Lists
 <p float="middle">
     <img src="img/todone-shared-list.gif" width="500" height="250" />
 </p>
 
-#### Due Date (with alerting mechnism) + Color Tags
+#### Due Date, Color Tags
 <p float="middle">
     <img src="img/todone-tag-color.gif" width="500" height="250" />
 </p>
