@@ -246,8 +246,6 @@ class TestViews(TestCase):
         self.assertEqual(response.status_code, 200)
         
     def test_getListItemByName(self):
-        request = self.factory.get('/todo/')
-        request.user = self.user
         todo = List.objects.create(
             title_text="test list",
             created_on=timezone.now(),
@@ -264,8 +262,11 @@ class TestViews(TestCase):
             list=todo,
             is_done=False,
         )
-        post = request.POST.copy()
-        post['todo'] = 1
-        request.POST = post
+        test_data = {'list_id' : '1',
+                     'list_item_name' : "test item"
+                     }
+        request = self.factory.post(f'/todo/', data=test_data,
+                                content_type="application/json")
+        request.user = self.user
         response = getListItemByName(request)
-        self.assertIsNotNone(response)
+        self.assertEqual(response.status_code, 200)
