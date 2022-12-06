@@ -4,6 +4,7 @@ from django.contrib.auth.models import User
 from todo.views import login_request, template_from_todo, template, delete_todo, index, getListTagsByUserid, removeListItem
 from django.utils import timezone
 from todo.models import List, ListItem, Template, TemplateItem, ListTags
+from todo.forms import NewUserForm
 import json
 
 
@@ -159,4 +160,10 @@ class TestViews(TestCase):
         request._body = json.dumps({ "list_item_id": 1 }).encode('utf-8')
         response = removeListItem(request)
         print(response)
-        self.assertIsNotNone(response)     
+        self.assertIsNotNone(response)
+        
+        
+    def test_NewUserForm(self):
+        form_data = { 'email': '123@123.com', 'username': '123', 'password1': 'K!35EGL&g7#U', 'password2': 'K!35EGL&g7#U'}
+        form = NewUserForm(form_data)
+        self.assertTrue(form.is_valid())
