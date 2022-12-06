@@ -16,8 +16,8 @@
 `to-done` lets you manage your todo list effectively with minimal effort. With a minimalistic web interface, 
 you can access your todolist on the go. Use our rich library of templates to create a new todo list very fast or create your own.
 
-<img src="img/todone-all.gif" width="1000" height="500" />
-<img src="img/todone-create-list.gif" width="1000" height="500" />
+<img src="img/todone-all.gif" width="800" height="500" />
+<img src="img/todone-create-list.gif" width="800" height="500" />
 
 Contents
 ========
