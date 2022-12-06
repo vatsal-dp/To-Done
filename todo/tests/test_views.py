@@ -1,7 +1,7 @@
 from django.urls import reverse
 from django.test import TestCase, Client, RequestFactory
 from django.contrib.auth.models import User
-from todo.views import login_request, template_from_todo, template, delete_todo, index, getListTagsByUserid, removeListItem, addNewListItem, updateListItem, createNewTodoList, register_request, getListItemByName, getListItemById, markListItem
+from todo.views import login_request, template_from_todo, template, delete_todo, index, getListTagsByUserid, removeListItem, addNewListItem, updateListItem, createNewTodoList, register_request, getListItemByName, getListItemById, markListItem, todo_from_template
 from django.utils import timezone
 from todo.models import List, ListItem, Template, TemplateItem, ListTags, SharedList
 from todo.forms import NewUserForm
@@ -371,3 +371,29 @@ class TestViews(TestCase):
         temp = createNewTodoList(request)
         response = index(request)
         self.assertEqual(response.status_code, 200)
+        
+    def test_todo_from_template(self):
+        request = self.factory.get('/todo/')
+        request.user = self.user
+        new_template = Template.objects.create(
+            title_text="test template",
+            created_on=timezone.now(),
+            updated_on=timezone.now(),
+            user_id_id=request.user.id
+        )
+        template_item = TemplateItem.objects.create(
+            item_text="test item",
+            created_on=timezone.now(),
+            template=new_template,
+            finished_on=timezone.now(),
+            tag_color="#f9f9f9",
+            due_date=timezone.now()
+        )
+        
+        post = request.POST.copy()
+        post['todo'] = 1
+        post['template'] = new_template.id
+        request.POST = post
+        request.method = "POST"
+        response = todo_from_template(request)
+        self.assertEqual(response.status_code, 302)
