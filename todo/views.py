@@ -61,7 +61,7 @@ def index(request, list_id=0):
                     shared_list.append(query_list)
         
     latest_list_items = ListItem.objects.order_by('list_id')
-    saved_templates = Template.objects.filter(user_id_id=request.user.id).order_by('created_on')
+    saved_templates = Template.objects.filter(user_id_id=request.user.id).order_by('due_date')
     list_tags = ListTags.objects.filter(user_id=request.user.id).order_by('created_on')
     
     # change color when is or over due
