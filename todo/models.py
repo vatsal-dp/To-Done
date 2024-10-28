@@ -48,7 +48,7 @@ class Template(models.Model):
     created_on = models.DateTimeField()
     updated_on = models.DateTimeField()
     user_id = models.ForeignKey(User, on_delete=models.CASCADE, null=True, blank=True)
-
+    due_date = models.DateField()
     objects = models.Manager()
 
     def __str__(self):
