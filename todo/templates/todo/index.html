@@ -1,3 +1,4 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -440,9 +441,14 @@
 
     </style>
     <meta charset="UTF-8">
+    <meta name="vapid-key" content="{{ vapid_key }}">
+    {% if user.id %}
+        <meta name="user_id" content="{{ user.id }}">
+    {% endif %}
     <title>To-Done</title>
 </head>
 <body>
+    <script src="{% static '/js/registerSw.js' %}"></script>
     {% load todo_extras %}
     <div class="topbar">
         <ul>

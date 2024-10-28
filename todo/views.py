@@ -4,6 +4,7 @@ import json
 from django.shortcuts import render, redirect, get_object_or_404, get_list_or_404
 from django.http import HttpResponse, JsonResponse, Http404
 from django.views.decorators.csrf import csrf_exempt
+from django.views.decorators.http import require_GET, require_POST
 from django.db import transaction, IntegrityError
 from django.utils import timezone
 
@@ -24,6 +25,9 @@ from django.contrib.auth.tokens import default_token_generator
 from django.utils.encoding import force_bytes
 from django.core.mail import EmailMessage
 
+# Import for notifications
+from webpush import send_user_notification
+
 
 # Render the home page with users' to-do lists
 def index(request, list_id=0):
@@ -31,6 +35,10 @@ def index(request, list_id=0):
         return redirect("/login")
     
     shared_list = []
+
+    webpush_settings = getattr(settings, 'WEBPUSH_SETTINGS', {})
+    vapid_key = webpush_settings.get('VAPID_PUBLIC_KEY')
+    user = request.user
 
     if list_id != 0:
         # latest_lists = List.objects.filter(id=list_id, user_id_id=request.user.id)
@@ -75,6 +83,8 @@ def index(request, list_id=0):
         'templates': saved_templates,
         'list_tags': list_tags,
         'shared_list': shared_list,
+        'user': user,
+        'vapid_key': vapid_key
     }
     return render(request, 'todo/index.html', context)
 
@@ -425,6 +435,25 @@ def createNewTodoList(request):
     else:
         return HttpResponse("Request method is not a Post")
 
+# Send a push notification to a user
+@require_POST
+@csrf_exempt
+def send_push(request):
+    try:
+        body = request.body
+        data = json.loads(body)
+
+        if 'head' not in data or 'body' not in data or 'id' not in data:
+            return JsonResponse(status=400, data={"message": "Invalid data format"})
+
+        user_id = data['id']
+        user = get_object_or_404(User, pk=user_id)
+        payload = {'head': data['head'], 'body': data['body']}
+        send_user_notification(user=user, payload=payload, ttl=1000)
+
+        return JsonResponse(status=200, data={"message": "Web push successful"})
+    except TypeError:
+        return JsonResponse(status=500, data={"message": "An error occurred"})
 
 # Register a new user account
 def register_request(request):
