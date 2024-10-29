@@ -24,6 +24,7 @@ urlpatterns = [
     path('addNewListItem', views.addNewListItem, name='addNewListItem'),
     path('updateListItem/<int:item_id>', views.updateListItem, name='updateListItem'),
     path('send_push', views.send_push, name='send_push'),
+    path('checkForNotifications', views.checkForNotifications, name='checkForNotifications'),
     path('webpush/', include('webpush.urls')),
     path("register", views.register_request, name="register"),
     path("login", views.login_request, name="login"),

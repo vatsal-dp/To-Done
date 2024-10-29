@@ -1,5 +1,6 @@
 import datetime
 import json
+import pytz
 
 from django.shortcuts import render, redirect, get_object_or_404, get_list_or_404
 from django.http import HttpResponse, JsonResponse, Http404
@@ -68,12 +69,13 @@ def index(request, list_id=0):
                 if query_list:
                     shared_list.append(query_list)
         
+
     latest_list_items = ListItem.objects.order_by('list_id')
     saved_templates = Template.objects.filter(user_id_id=request.user.id).order_by('created_on')
     list_tags = ListTags.objects.filter(user_id=request.user.id).order_by('created_on')
     
     # change color when is or over due
-    cur_date = datetime.date.today()
+    cur_date = datetime.datetime.now().replace(tzinfo=pytz.UTC)
     for list_item in latest_list_items:       
         list_item.color = "#FF0000" if cur_date > list_item.due_date else "#000000"
             
@@ -225,6 +227,7 @@ def addNewListItem(request):
         tag_color = body['tag_color']
         print(item_name)
         print(create_on)
+        print(due_date)
         result_item_id = -1
         # create a new to-do list object and save it to the database
         try:
@@ -358,6 +361,7 @@ def getListItemById(request):
 def createNewTodoList(request):
 
     if not request.user.is_authenticated:
+        print("user is not authenticated")
         return redirect("/login")
 
     if request.method == 'POST':
@@ -450,6 +454,56 @@ def send_push(request):
         user = get_object_or_404(User, pk=user_id)
         payload = {'head': data['head'], 'body': data['body']}
         send_user_notification(user=user, payload=payload, ttl=1000)
+
+        return JsonResponse(status=200, data={"message": "Web push successful"})
+    except TypeError:
+        return JsonResponse(status=500, data={"message": "An error occurred"})
+    
+# Send a push notification to a user
+@require_POST
+@csrf_exempt
+def checkForNotifications(request):
+    try:
+        body = request.body
+        data = json.loads(body)
+
+        if 'timestamp' not in data:
+            return JsonResponse(status=400, data={"message": "Invalid data format"})
+
+        timestamp = data['timestamp']
+
+        shared_list = []
+
+        latest_lists = List.objects.filter(user_id_id=request.user.id).order_by('-updated_on')
+
+        try:
+            query_list_str = SharedList.objects.get(user_id=request.user.id).shared_list_id
+        except SharedList.DoesNotExist:
+            query_list_str = None
+        
+        if query_list_str != None:
+            shared_list_id = query_list_str.split(" ")
+            shared_list_id.remove("")
+
+            latest_lists = list(latest_lists)
+
+            for list_id in shared_list_id:
+            
+                try:
+                    query_list = List.objects.get(id=int(list_id))
+                except List.DoesNotExist:
+                    query_list = None
+
+                if query_list:
+                    shared_list.append(query_list)
+
+        print(shared_list)
+        # shared_list = SharedList(user=User.objects.get(request.user), shared_list_id="")
+        # print(shared_list)
+
+        # user = get_object_or_404(User, pk=user_id)
+        # payload = {'head': data['head'], 'body': data['body']}
+        # send_user_notification(user=user, payload=payload, ttl=1000)
 
         return JsonResponse(status=200, data={"message": "Web push successful"})
     except TypeError:
