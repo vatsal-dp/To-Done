@@ -679,6 +679,9 @@ function removeListItem() {
 function checkForNotifications(){
 	console.log('called evry minute')
 
+    const meta = document.querySelector('meta[name="user_id"]');
+    const id = meta ? meta.content : null;
+
     var today = new Date()
     var timestamp = today.getTime() / 1000
 
@@ -686,12 +689,13 @@ function checkForNotifications(){
     httpRequest.open('POST', '/checkForNotifications');
     httpRequest.setRequestHeader('Content-Type', "application/json;charset=UTF-8")
     var params = {
-        "timestamp": timestamp
+        "timestamp": timestamp,
+        "id": id
     }
     httpRequest.send(JSON.stringify(params))
 }
 
-setInterval(checkForNotifications, 6000);
+setInterval(checkForNotifications, 60000);
 
 // When click a list item, restore all othe
 var list = document.getElementsByClassName("listItemsUnorderedList");
@@ -834,6 +838,8 @@ function newElement(list_id, saved_to_database = true) {
         var httpRequest = new XMLHttpRequest()
         var today = new Date()
         var create_on_timestamp = today.getTime() / 1000
+        var due_date_epoch = new Date(inputDue)
+        due_date_epoch = due_date_epoch.getTime() / 1000
         httpRequest.onreadystatechange = function() {
             if (this.readyState === 4 && this.status === 200) {
                 // get the newly created item's id and set it as the id of the html tag
@@ -862,13 +868,14 @@ function newElement(list_id, saved_to_database = true) {
                 li.appendChild(span);
             }
         };
+        console.log(due_date_epoch)
         httpRequest.open('POST', '/addNewListItem');
         httpRequest.setRequestHeader('Content-Type', "application/json;charset=UTF-8")
         var params = {
             "list_id": list_id,
             "list_item_name": inputValue,
             "create_on": create_on_timestamp,
-            "due_date": inputDue,
+            "due_date": due_date_epoch,
 	        "tag_color": inputColor
         }
         httpRequest.send(JSON.stringify(params))

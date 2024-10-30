@@ -1,6 +1,7 @@
 import datetime
 import json
 import pytz
+import calendar, time
 
 from django.shortcuts import render, redirect, get_object_or_404, get_list_or_404
 from django.http import HttpResponse, JsonResponse, Http404
@@ -70,12 +71,12 @@ def index(request, list_id=0):
                     shared_list.append(query_list)
         
 
-    latest_list_items = ListItem.objects.order_by('list_id')
+    latest_list_items = ListItem.objects.order_by('-due_date')
     saved_templates = Template.objects.filter(user_id_id=request.user.id).order_by('created_on')
     list_tags = ListTags.objects.filter(user_id=request.user.id).order_by('created_on')
     
     # change color when is or over due
-    cur_date = datetime.datetime.now().replace(tzinfo=pytz.UTC)
+    cur_date = datetime.datetime.now().replace(tzinfo=pytz.UTC) + datetime.timedelta(minutes=60)
     for list_item in latest_list_items:       
         list_item.color = "#FF0000" if cur_date > list_item.due_date else "#000000"
             
@@ -221,18 +222,20 @@ def addNewListItem(request):
         list_id = body['list_id']
         item_name = body['list_item_name']
         create_on = body['create_on']
-        create_on_time = datetime.datetime.fromtimestamp(create_on)
-        finished_on_time = datetime.datetime.fromtimestamp(create_on)
+        eastern = pytz.timezone('US/Eastern')
+        create_on_time = datetime.datetime.fromtimestamp(create_on).replace(tzinfo=eastern)
+        finished_on_time = datetime.datetime.fromtimestamp(create_on).replace(tzinfo=eastern)
         due_date = body['due_date']
         tag_color = body['tag_color']
-        print(item_name)
-        print(create_on)
+        due_date_on_time = datetime.datetime.fromtimestamp(due_date).replace(tzinfo=eastern)
+        # print(item_name)
+        # print(create_on)
         print(due_date)
         result_item_id = -1
         # create a new to-do list object and save it to the database
         try:
             with transaction.atomic():
-                todo_list_item = ListItem(item_name=item_name, created_on=create_on_time, finished_on=finished_on_time, due_date=due_date, tag_color=tag_color, list_id=list_id, item_text="", is_done=False)
+                todo_list_item = ListItem(item_name=item_name, created_on=create_on_time, finished_on=finished_on_time, due_date=due_date_on_time, tag_color=tag_color, list_id=list_id, item_text="", is_done=False)
                 todo_list_item.save()
                 result_item_id = todo_list_item.id
         except IntegrityError:
@@ -467,37 +470,40 @@ def checkForNotifications(request):
         body = request.body
         data = json.loads(body)
 
-        if 'timestamp' not in data:
+        if 'timestamp' not in data or 'id' not in data:
             return JsonResponse(status=400, data={"message": "Invalid data format"})
 
         timestamp = data['timestamp']
+        user_id = data['id']
+        user = get_object_or_404(User, pk=user_id)
 
-        shared_list = []
+        payload = {'head': "Head", 'body': "Body"}
 
-        latest_lists = List.objects.filter(user_id_id=request.user.id).order_by('-updated_on')
+        allItems = []
 
-        try:
-            query_list_str = SharedList.objects.get(user_id=request.user.id).shared_list_id
-        except SharedList.DoesNotExist:
-            query_list_str = None
-        
-        if query_list_str != None:
-            shared_list_id = query_list_str.split(" ")
-            shared_list_id.remove("")
+        # shared_list = SharedList.objects.filter(user=User.objects.get(request.user.id))
+        eastern = pytz.timezone('US/Eastern')
+        latest_lists = List.objects.filter(user_id=request.user.id).order_by('-updated_on')
+        # cur_date = datetime.datetime.now(eastern).replace(tzinfo=pytz.UTC)
+        cur_date = datetime.datetime.now().replace(tzinfo=pytz.UTC, second=0, microsecond=0)
 
-            latest_lists = list(latest_lists)
+        for list in latest_lists:
+            # print(list)
+            allItems = ListItem.objects.filter(list=list).order_by('list_id')
+            for item in allItems:
+                # realDueDate = item.due_date
+                realDueDate = item.due_date - datetime.timedelta(hours=5)
+                # realDueDate_epoch = calendar.timegm(time.strptime(realDueDate, '%Y-%m-%d %H:%M:%S'))
+                print(cur_date, " - ", realDueDate, ": ", cur_date - realDueDate, " ?= ", datetime.timedelta(minutes=30))
+                if  cur_date - realDueDate == datetime.timedelta(minutes=30):
+                    send_user_notification(user=user, payload=payload, ttl=1000)
+                    print("TRUE")
 
-            for list_id in shared_list_id:
-            
-                try:
-                    query_list = List.objects.get(id=int(list_id))
-                except List.DoesNotExist:
-                    query_list = None
+        # for list_item in latest_list_items:
+        #     print(list_item.due_date)
 
-                if query_list:
-                    shared_list.append(query_list)
-
-        print(shared_list)
+        # print (latest_list_items)
+        # print(shared_list)
         # shared_list = SharedList(user=User.objects.get(request.user), shared_list_id="")
         # print(shared_list)
 
