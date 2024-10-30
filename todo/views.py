@@ -477,8 +477,6 @@ def checkForNotifications(request):
         user_id = data['id']
         user = get_object_or_404(User, pk=user_id)
 
-        payload = {'head': "Head", 'body': "Body"}
-
         allItems = []
 
         # shared_list = SharedList.objects.filter(user=User.objects.get(request.user.id))
@@ -494,8 +492,10 @@ def checkForNotifications(request):
                 # realDueDate = item.due_date
                 realDueDate = item.due_date - datetime.timedelta(hours=5)
                 # realDueDate_epoch = calendar.timegm(time.strptime(realDueDate, '%Y-%m-%d %H:%M:%S'))
-                print(cur_date, " - ", realDueDate, ": ", cur_date - realDueDate, " ?= ", datetime.timedelta(minutes=30))
-                if  cur_date - realDueDate == datetime.timedelta(minutes=30):
+                print(cur_date, " - ", realDueDate, ": ", realDueDate - cur_date, " ?= ", datetime.timedelta(minutes=30))
+                if  realDueDate - cur_date == datetime.timedelta(minutes=30):
+                    message = "{} will be due in 30 minutes".format(item.item_name)
+                    payload = {'head': item.item_name, 'body': message}
                     send_user_notification(user=user, payload=payload, ttl=1000)
                     print("TRUE")
 
