@@ -483,7 +483,7 @@ def checkForNotifications(request):
         eastern = pytz.timezone('US/Eastern')
         latest_lists = List.objects.filter(user_id=request.user.id).order_by('-updated_on')
         # cur_date = datetime.datetime.now(eastern).replace(tzinfo=pytz.UTC)
-        cur_date = datetime.datetime.now().replace(tzinfo=pytz.UTC, second=0, microsecond=0)
+        cur_date = datetime.datetime.now().replace(tzinfo=pytz.UTC, second=0, microsecond=0) + datetime.timedelta(hours=1)
 
         for list in latest_lists:
             # print(list)
