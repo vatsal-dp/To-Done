@@ -12,4 +12,6 @@ import django
 
 django.setup()
 
-pdoc.cli(["--output-dir", OUTPUT_DIR, "--force", "--html", "todo"])
+doc = pdoc.pdoc("todo")
+with open(os.path.join(OUTPUT_DIR, "todo.html"), "w") as file:
+    file.write(doc)
