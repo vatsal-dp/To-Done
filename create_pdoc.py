@@ -1,4 +1,4 @@
-from pdoc.cli import *
+import pdoc
 
 OUTPUT_DIR = "./docs"
 
