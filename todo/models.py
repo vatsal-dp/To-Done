@@ -52,7 +52,7 @@ class ListItem(models.Model):
     
     def calculate_delay(self):
         if self.is_done and self.finished_on and self.due_date:
-            delay_days = (self.finished_on.date() - self.due_date).days # This is getting the delay in days
+            delay_days = (self.finished_on.date() - self.due_date.date()).days # This is getting the delay in days
             if delay_days >= 0:
                 self.delay = delay_days
 
