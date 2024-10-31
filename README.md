@@ -5,7 +5,7 @@
 
 [![Build Status](https://github.com/Chloe-Ku/smart-todo/actions/workflows/django.yml/badge.svg)](https://github.com/Chloe-Ku/smart-todo/actions/workflows/django.yml)
 [![Coverage Status](https://coveralls.io/repos/github/CSC510-Team-57/To-Done/badge.svg?branch=main)](https://coveralls.io/github/CSC510-Team-57/To-Done?branch=main)
-[![license badge](https://img.shields.io/badge/License-MIT-green.svg)](https://github.com/Chloe-Ku/smart-todo/blob/main/LICENSE)
+[![license badge](https://img.shields.io/badge/License-MIT-green.svg)](https://github.com/CSC510-Team-57/To-Done/blob/main/LICENSE)
 [![issues badge](https://img.shields.io/github/issues/Chloe-Ku/smart-todo)](https://github.com/Chloe-Ku/smart-todo/issues)
 [![Python 3.8](https://img.shields.io/badge/python-3.8-blue.svg)](https://www.python.org/downloads/release/python-380/)
 [![Django 4.1](https://img.shields.io/badge/django-4.1-blue.svg)](https://docs.djangoproject.com/en/4.1/releases/4.1/)
