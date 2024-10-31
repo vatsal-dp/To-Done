@@ -84,7 +84,7 @@ class TestViews(TestCase):
     def test_template_from_todo_redirect(self):
         client = self.client
         response = client.get(reverse('todo:template_from_todo'))
-        self.assertEquals(response.status_code, 302)
+        self.assertEqual(response.status_code, 302)
 
     def test_template_from_todo_function(self):
         request = self.factory.get('/todo/')
