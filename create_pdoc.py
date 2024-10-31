@@ -12,7 +12,10 @@ import django
 
 django.setup()
 
-cmdline_args = ["--html", "-o", OUTPUT_DIR, "./todo"]
-
 if __name__ == "__main__":
-    main(parser.parse_args(cmdline_args))
+    # Generate HTML documentation
+    pdoc.pdoc(
+        "todo",  # module to document
+        output_directory=OUTPUT_DIR,
+        format="html"
+    )
