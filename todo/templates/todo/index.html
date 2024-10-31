@@ -1,3 +1,4 @@
+<p>Test123 Change</p>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -90,6 +91,17 @@
           box-shadow: 1px 1px 5px #555 inset;
           white-space: nowrap;
           display: block;
+        }
+
+        .main select {
+            border: none;
+            border-radius: 10px;
+            width: 75%;
+            padding: 10px;
+            font-size: 16px;
+            box-shadow: 1px 1px 5px #555 inset;
+            white-space: nowrap;
+            display: block;
         }
 
         .sidenav div {
@@ -506,6 +518,14 @@
                     <label for="{{ "InputColor_"|addstr:list.id }}">Color Tag</label>
                     <input type="color" class="form-control" id="{{ "InputColor_"|addstr:list.id }}" value="#f9f9f9">
                 </div>
+                <div class="form-group">
+                    <label for="InputPriority_{{ list.id }}">Priority</label>
+                    <select id="InputPriority_{{ list.id }}" class="form-control">
+                        <option value="1">High</option>
+                        <option value="2" selected>Medium</option>
+                        <option value="3">Low</option>
+                    </select>
+                </div>
             </form>
             <div>
                 <span onclick="newElement({{ list.id }})" class="addBtn">Add</span>
@@ -527,7 +547,8 @@
                             <label for="{{ "ListItem_"|addstr:list_item.id }}">{{ list_item.item_name }}</label>
                             <br>
                             <label for="{{ "ListItem_"|addstr:list_item.id }}" class = "text-right">Start date: {{ list_item.created_on }}</label>
-                            <label for="{{ "ListItem_"|addstr:list_item.id }}" style="color:{{list_item.color}};">Due date: {{ list_item.due_date }}</label>
+                            <label for="{{ "ListItem_"|addstr:list_item.id }}" style="color:{{list_item.color}};">Due date: {{ list_item.due_date }}.</label>
+                            <label for="{{ "ListItem_"|addstr:list_item.id }}" class = "text-right">Priority: {{ list_item.priority }}</label>
                             {% if list_item.is_done == 1%}
                                 <p> It took you: {{ list_item.finished_on|timeuntil:list_item.created_on }} to complete</p>
                             {% endif %}
@@ -581,6 +602,14 @@
                         <label for="{{ "InputColor_"|addstr:list.id }}">Color Tag</label>
                         <input type="color" class="form-control" id="{{ "InputColor_"|addstr:list.id }}" value="#f9f9f9">
                     </div>
+                    <div class="form-group">
+                        <label for="InputPriority_{{ list.id }}">Priority</label>
+                        <select id="InputPriority_{{ list.id }}" class="form-control">
+                            <option value="1">High</option>
+                            <option value="2" selected>Medium</option>
+                            <option value="3">Low</option>
+                        </select>
+                    </div>
                 </form>
                 <div>
                     <span onclick="newElement({{ list.id }})" class="addBtn">Add</span>
@@ -602,7 +631,8 @@
                                 <label for="{{ "ListItem_"|addstr:list_item.id }}">{{ list_item.item_name }}</label>
                                 <br>
                                 <label for="{{ "ListItem_"|addstr:list_item.id }}" class="text-right">Start date: {{ list_item.created_on }}</label>
-                                <label for="{{ "ListItem_"|addstr:list_item.id }}" style="color:{{list_item.color}};">Due: {{list_item.due_date}}</label>
+                                <label for="{{ "ListItem_"|addstr:list_item.id }}" style="color:{{list_item.color}};">Due: {{list_item.due_date}}.</label>
+                                <label for="{{ "ListItem_"|addstr:list_item.id }}" class = "text-right">Priority: {{ list_item.priority }}</label>
                                 {% if list_item.is_done == 1%}
                                     <p> It took you: {{ list_item.finished_on|timeuntil:list_item.created_on }} to complete</p>
                                 {% endif %}
@@ -790,6 +820,7 @@ function newElement(list_id, saved_to_database = true) {
     var inputValue = inputBox.value;
     var inputDue = document.getElementById("InputDue_" + list_id.toString()).value;
     var inputColor = document.getElementById("InputColor_" + list_id.toString()).value;
+    var inputPriority = document.getElementById("InputPriority_" + list_id.toString()).value
     // var unorderedList = inputBox.parentElement.nextElementSibling
 
     {#var list_html_tag_id =  #}
@@ -846,7 +877,9 @@ function newElement(list_id, saved_to_database = true) {
             "list_item_name": inputValue,
             "create_on": create_on_timestamp,
             "due_date": inputDue,
-	        "tag_color": inputColor
+	        "tag_color": inputColor,
+            "priority": inputPriority
+            
         }
         httpRequest.send(JSON.stringify(params))
     }
