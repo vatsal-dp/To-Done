@@ -13,9 +13,8 @@ import django
 django.setup()
 
 if __name__ == "__main__":
-    # Generate HTML documentation
-    pdoc.pdoc(
-        "todo",  # module to document
-        output_directory=OUTPUT_DIR,
-        format="html"
-    )
+    # Create documentation generator
+    doc = pdoc.pdoc("todo")
+    
+    # Write HTML files to the output directory
+    doc.output_to_files(directory=OUTPUT_DIR)
