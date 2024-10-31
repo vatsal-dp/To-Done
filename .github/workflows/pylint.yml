@@ -24,3 +24,17 @@ jobs:
       with:
         lint-path: '*.py'  # lint src package
         python-version: 3.11  # python version which will lint the package
+        
+  badge_job:
+    runs-on: ubuntu-latest
+    steps:
+      - id: date
+        run: echo "##[set-output name=data;]$(pylint)"
+      - name: Pylint badge
+        uses: RubbaBoy/BYOB@v1.3.0
+        with:
+          NAME: time
+          LABEL: 'Updated at'
+          STATUS: ${{ steps.pylint.outputs.data }}
+          COLOR: 00EEFF
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
