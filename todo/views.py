@@ -1,12 +1,10 @@
 import datetime
 import json
-import pytz
-import calendar, time
 
 from django.shortcuts import render, redirect, get_object_or_404, get_list_or_404
 from django.http import HttpResponse, JsonResponse, Http404
 from django.views.decorators.csrf import csrf_exempt
-from django.views.decorators.http import require_GET, require_POST
+from django.views.decorators.http import require_POST
 from django.db import transaction, IntegrityError
 from django.utils import timezone
 
@@ -17,7 +15,7 @@ from django.conf import settings
 from django.contrib.auth import login, authenticate, logout
 from django.contrib.auth.forms import AuthenticationForm
 from django.contrib import messages
-from django.core.mail import send_mail, BadHeaderError
+from django.core.mail import BadHeaderError
 from django.contrib.auth.forms import PasswordResetForm
 from django.contrib.auth.models import User
 from django.template.loader import render_to_string
@@ -34,9 +32,10 @@ from webpush import send_user_notification
 
 # Render the home page with users' to-do lists
 def index(request, list_id=0):
+    """Render the home page with users' to-do lists"""
     if not request.user.is_authenticated:
         return redirect("/login")
-    
+
     shared_list = []
 
     webpush_settings = getattr(settings, 'WEBPUSH_SETTINGS', {})
@@ -54,15 +53,15 @@ def index(request, list_id=0):
             query_list_str = SharedList.objects.get(user_id=request.user.id).shared_list_id
         except SharedList.DoesNotExist:
             query_list_str = None
-        
-        if query_list_str != None:
+
+        if query_list_str is not None:
             shared_list_id = query_list_str.split(" ")
             shared_list_id.remove("")
 
             latest_lists = list(latest_lists)
 
             for list_id in shared_list_id:
-            
+
                 try:
                     query_list = List.objects.get(id=int(list_id))
                 except List.DoesNotExist:
@@ -70,12 +69,12 @@ def index(request, list_id=0):
 
                 if query_list:
                     shared_list.append(query_list)
-        
+
 
     latest_list_items = ListItem.objects.order_by('-due_date')
     saved_templates = Template.objects.filter(user_id_id=request.user.id).order_by('created_on')
     list_tags = ListTags.objects.filter(user_id=request.user.id).order_by('created_on')
-    
+
     # Chat GPT Assisted with some of the fields
     completed_tasks = ListItem.objects.filter(is_done=True, list__user_id=request.user)
     on_time_tasks = completed_tasks.filter(delay=0).count()
@@ -85,9 +84,9 @@ def index(request, list_id=0):
 
     # change color when is or over due
     cur_date = datetime.datetime.now().replace(tzinfo=pytz.UTC) + datetime.timedelta(minutes=60)
-    for list_item in latest_list_items:       
+    for list_item in latest_list_items:
         list_item.color = "#FF0000" if cur_date > list_item.due_date else "#000000"
-            
+
     context = {
         'latest_lists': latest_lists,
         'latest_list_items': latest_list_items,
@@ -104,6 +103,7 @@ def index(request, list_id=0):
 
 # Create a new to-do list from templates and redirect to the to-do list homepage
 def todo_from_template(request):
+    """Create a new to-do list from templates and redirect to the to-do list homepage"""
     if not request.user.is_authenticated:
         return redirect("/login")
     template_id = request.POST['template']
@@ -130,6 +130,7 @@ def todo_from_template(request):
 
 # Create a new Template from existing to-do list and redirect to the templates list page
 def template_from_todo(request):
+    """Create a new Template from existing to-do list and redirect to the templates list page"""
     if not request.user.is_authenticated:
         return redirect("/login")
     todo_id = request.POST['todo']
@@ -154,6 +155,7 @@ def template_from_todo(request):
 
 # Delete a to-do list
 def delete_todo(request):
+    """Delete a to-do list"""
     if not request.user.is_authenticated:
         return redirect("/login")
     todo_id = request.POST['todo']
@@ -164,6 +166,7 @@ def delete_todo(request):
 
 # Render the template list page
 def template(request, template_id=0):
+    """Render the template list page"""
     if not request.user.is_authenticated:
         return redirect("/login")
     if template_id != 0:
@@ -179,6 +182,7 @@ def template(request, template_id=0):
 # Remove a to-do list item, called by javascript function
 @csrf_exempt
 def removeListItem(request):
+    """Remove a to-do list item, called by javascript function"""
     if not request.user.is_authenticated:
         return redirect("/login")
     if request.method == 'POST':
@@ -194,12 +198,12 @@ def removeListItem(request):
             print(str(e))
             print("unknown error occurs when trying to update todo list item text")
         return redirect("/todo")
-    else:
-        return redirect("/todo")
+    return redirect("/todo")
 
 # Update a to-do list item, called by javascript function
 @csrf_exempt
 def updateListItem(request, item_id):
+    """Update a to-do list item, called by javascript function"""
     if not request.user.is_authenticated:
         return redirect("/login")
     if request.method == 'POST':
@@ -218,13 +222,13 @@ def updateListItem(request, item_id):
             print(str(e))
             print("unknown error occurs when trying to update todo list item text")
         return redirect("/")
-    else:
-        return redirect("index")
+    return redirect("index")
 
 
 # Add a new to-do list item, called by javascript function
 @csrf_exempt
 def addNewListItem(request):
+    """Add a new to-do list item, called by javascript function"""
     if not request.user.is_authenticated:
         return redirect("/login")
     if request.method == 'POST':
@@ -247,7 +251,10 @@ def addNewListItem(request):
         # create a new to-do list object and save it to the database
         try:
             with transaction.atomic():
-                todo_list_item = ListItem(item_name=item_name, created_on=create_on_time, finished_on=finished_on_time, due_date=due_date_on_time, tag_color=tag_color, list_id=list_id, item_text="", priority = priority, is_done=False)
+                todo_list_item = ListItem(item_name=item_name, created_on=create_on_time,
+                                           finished_on=finished_on_time, due_date=due_date_on_time,
+                                             tag_color=tag_color, list_id=list_id, item_text="",
+                                               priority = priority, is_done=False)
                 todo_list_item.save()
                 result_item_id = todo_list_item.id
         except IntegrityError:
@@ -261,9 +268,7 @@ def addNewListItem(request):
 # Mark a to-do list item as done/not done, called by javascript function
 @csrf_exempt
 def markListItem(request):
-    """
-    Mark a list item as done or undo it
-    """
+    """Mark a to-do list item as done/not done, called by javascript function"""
     if not request.user.is_authenticated:
         return redirect("/login")
     if request.method == 'POST':
@@ -292,7 +297,9 @@ def markListItem(request):
                     query_item.calculate_completion_time()
                 query_item.save()
                 # Sending an success response
-                return JsonResponse({'item_name': query_item.item_name, 'list_name': query_list.title_text, 'item_text': query_item.item_text})
+                return JsonResponse({'item_name': query_item.item_name,
+                                      'list_name': query_list.title_text,
+                                        'item_text': query_item.item_text})
         except IntegrityError:
             print("query list item" + str(list_item_name) + " failed!")
             JsonResponse({})
@@ -303,6 +310,7 @@ def markListItem(request):
 # Get all the list tags by user id
 @csrf_exempt
 def getListTagsByUserid(request):
+    """Get all the list tags by user id"""
     if not request.user.is_authenticated:
         return redirect("/login")
     if request.method == 'POST':
@@ -320,6 +328,7 @@ def getListTagsByUserid(request):
 # Get a to-do list item by name, called by javascript function
 @csrf_exempt
 def getListItemByName(request):
+    """Get a to-do list item by name, called by javascript function"""
     if not request.user.is_authenticated:
         return redirect("/login")
     if request.method == 'POST':
@@ -337,7 +346,10 @@ def getListItemByName(request):
                 query_list = List.objects.get(id=list_id)
                 query_item = ListItem.objects.get(list_id=list_id, item_name=list_item_name)
                 # Sending an success response
-                return JsonResponse({'item_id': query_item.id, 'item_name': query_item.item_name, 'list_name': query_list.title_text, 'item_text': query_item.item_text})
+                return JsonResponse({'item_id': query_item.id,
+                                      'item_name': query_item.item_name,
+                                        'list_name': query_list.title_text,
+                                          'item_text': query_item.item_text})
         except IntegrityError:
             print("query list item" + str(list_item_name) + " failed!")
             JsonResponse({})
@@ -348,6 +360,7 @@ def getListItemByName(request):
 # Get a to-do list item by id, called by javascript function
 @csrf_exempt
 def getListItemById(request):
+    """Get a to-do list item by id, called by javascript function"""
     if not request.user.is_authenticated:
         return redirect("/login")
     if request.method == 'POST':
@@ -367,7 +380,10 @@ def getListItemById(request):
                 query_item = ListItem.objects.get(id=list_item_id)
                 print("item_text", query_item.item_text)
                 # Sending an success response
-                return JsonResponse({'item_id': query_item.id, 'item_name': query_item.item_name, 'list_name': query_list.title_text, 'item_text': query_item.item_text})
+                return JsonResponse({'item_id': query_item.id,
+                                      'item_name': query_item.item_name,
+                                        'list_name': query_list.title_text,
+                                          'item_text': query_item.item_text})
         except IntegrityError:
             print("query list item" + str(list_item_name) + " failed!")
             JsonResponse({})
@@ -378,6 +394,7 @@ def getListItemById(request):
 # Create a new to-do list, called by javascript function
 @csrf_exempt
 def createNewTodoList(request):
+    """Create a new to-do list, called by javascript function"""
 
     if not request.user.is_authenticated:
         print("user is not authenticated")
@@ -400,10 +417,16 @@ def createNewTodoList(request):
             with transaction.atomic():
                 user_id = request.user.id
                 # print(user_id)
-                todo_list = List(user_id_id=user_id, title_text=list_name, created_on=create_on_time, updated_on=create_on_time, list_tag=tag_name)
+                todo_list = List(user_id_id=user_id,
+                                  title_text=list_name,
+                                    created_on=create_on_time,
+                                      updated_on=create_on_time,
+                                        list_tag=tag_name)
                 if body['create_new_tag']:
                     # print('new tag')
-                    new_tag = ListTags(user_id_id=user_id, tag_name=tag_name, created_on=create_on_time)
+                    new_tag = ListTags(user_id_id=user_id,
+                                        tag_name=tag_name,
+                                          created_on=create_on_time)
                     new_tag.save()
 
                 todo_list.save()
@@ -412,7 +435,7 @@ def createNewTodoList(request):
                 # Progress
                 if body['shared_user']:
                     user_list = shared_user.split(' ')
-                    
+
 
                     k = len(user_list)-1
                     i = 0
@@ -429,7 +452,7 @@ def createNewTodoList(request):
                             shared_list_id = shared_list_id + str(todo_list.id) + " "
                             SharedList.objects.filter(user=query_user).update(shared_list_id=shared_list_id)
                             i += 1
-                            
+
                         else:
                             print("No user named " + user_list[i] + " found!")
                             user_not_found.append(user_list[i])
@@ -450,9 +473,9 @@ def createNewTodoList(request):
             print("unknown error occurs when trying to create and save a new todo list")
             return HttpResponse("Request failed when operating on database")
         # return HttpResponse("Success!")  # Sending an success response
-        context = {
-            'user_not_found': user_not_found,
-        }
+        # context = {
+        #     'user_not_found': user_not_found,
+        # }
         return HttpResponse("Success!")
         # return redirect("index")
     else:
@@ -462,6 +485,7 @@ def createNewTodoList(request):
 @require_POST
 @csrf_exempt
 def send_push(request):
+    """Send a push notification to a user"""
     try:
         body = request.body
         data = json.loads(body)
@@ -477,11 +501,12 @@ def send_push(request):
         return JsonResponse(status=200, data={"message": "Web push successful"})
     except TypeError:
         return JsonResponse(status=500, data={"message": "An error occurred"})
-    
+
 # Send a push notification to a user
 @require_POST
 @csrf_exempt
 def checkForNotifications(request):
+    """Send a push notification to a user"""
     try:
         body = request.body
         data = json.loads(body)
@@ -533,6 +558,7 @@ def checkForNotifications(request):
 
 # Register a new user account
 def register_request(request):
+    """Register a new user account"""
     if request.method == "POST":
         form = NewUserForm(request.POST)
         if form.is_valid():
@@ -553,33 +579,36 @@ def register_request(request):
 
 # Login a user
 def login_request(request):
-	if request.method == "POST":
-		form = AuthenticationForm(request, data=request.POST)
-		if form.is_valid():
-			username = form.cleaned_data.get('username')
-			password = form.cleaned_data.get('password')
-			user = authenticate(username=username, password=password)
-			if user is not None:
-				login(request, user)
-				messages.info(request, f"You are now logged in as {username}.")
-				return redirect("todo:index")
-			else:
-				messages.error(request,"Invalid username or password.")
-		else:
-			messages.error(request,"Invalid username or password.")
-	form = AuthenticationForm()
-	return render(request=request, template_name="todo/login.html", context={"login_form":form})
+    if request.method == "POST":
+        """Login a user"""
+        form = AuthenticationForm(request, data=request.POST)
+        if form.is_valid():
+            username = form.cleaned_data.get('username')
+            password = form.cleaned_data.get('password')
+            user = authenticate(username=username, password=password)
+            if user is not None:
+                login(request, user)
+                messages.info(request, f"You are now logged in as {username}.")
+                return redirect("todo:index")
+            else:
+                messages.error(request,"Invalid username or password.")
+        else:
+            messages.error(request,"Invalid username or password.")
+    form = AuthenticationForm()
+    return render(request=request, template_name="todo/login.html", context={"login_form":form})
 
 
 # Logout a user
 def logout_request(request):
-	logout(request)
-	messages.info(request, "You have successfully logged out.")
-	return redirect("todo:index")
+    """Logout a user"""
+    logout(request)
+    messages.info(request, "You have successfully logged out.")
+    return redirect("todo:index")
 
 
 # Reset user password
 def password_reset_request(request):
+    """Reset user password"""
     if request.method == "POST":
         password_reset_form = PasswordResetForm(request.POST)
         if password_reset_form.is_valid():
@@ -604,12 +633,12 @@ def password_reset_request(request):
                         send_email.fail_silently = False
                         send_email.send()
                     except BadHeaderError:
-                        return HttpResponse('Invalid header found')                  
+                        return HttpResponse('Invalid header found')
                     return redirect("/password_reset/done/")
             else:
                 messages.error(request, "Not an Email from existing users!")
         else:
             messages.error(request, "Not an Email from existing users!")
-    
+
     password_reset_form = PasswordResetForm()
     return render(request=request, template_name="todo/password/password_reset.html", context={"password_reset_form":password_reset_form})

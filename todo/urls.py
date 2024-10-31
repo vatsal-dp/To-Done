@@ -1,8 +1,12 @@
+"""
+This module defines URL patterns for the todo app.
+"""
+
 from django.urls import path, include
 from django.views.generic import TemplateView
 from . import views
 
-app_name = "todo"
+APP_NAME = "todo"
 
 
 # Urls for to-done app
@@ -30,5 +34,9 @@ urlpatterns = [
     path("login", views.login_request, name="login"),
     path("logout", views.logout_request, name="logout"),
     path("password_reset", views.password_reset_request, name="password_reset"),
-    path('sw.js', TemplateView.as_view(template_name='sw.js', content_type='application/x-javascript'), name="sw.js")
+    path(
+        'sw.js',
+        TemplateView.as_view(template_name='sw.js', content_type='application/x-javascript'),
+        name="sw.js"
+    )
 ]

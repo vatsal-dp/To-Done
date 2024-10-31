@@ -1,3 +1,6 @@
+"""
+This module defines settings for the todo app.
+"""
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 ALLOWED_HOSTS = ['*']
 
