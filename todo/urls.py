@@ -6,7 +6,7 @@ from django.urls import path, include
 from django.views.generic import TemplateView
 from . import views
 
-APP_NAME = "todo"
+app_name = "todo"
 
 
 # Urls for to-done app
