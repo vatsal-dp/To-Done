@@ -4,37 +4,38 @@ on: [push]
 
 jobs:
   build:
-
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v2
-    - name: Set up Python 3.11
-      uses: actions/setup-python@v1
-      with:
-        python-version: 3.11
-    - name: Install dependencies
-      run: |
-        python -m pip install --upgrade pip
-        pip install pylint
-    - name: Analysing the code with pylint
-      run: |
-        find . -type f \( -name 'apps.py' -o -name 'forms.py' -o -name 'models.py' -o -name 'settings.py' -o -name 'urls.py' -o -name 'views.py' \) -exec pylint {} +
-    - uses: Silleellie/pylint-github-action@v2
-      with:
-        lint-path: '*.py'  # lint src package
-        python-version: 3.11  # python version which will lint the package
+      - uses: actions/checkout@v2
+      
+      - name: Set up Python 3.11
+        uses: actions/setup-python@v1
+        with:
+          python-version: 3.11
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install pylint
+
+      - name: Analyse the code with pylint
+        id: pylint
+        run: |
+          score=$(find . -type f \( -name 'apps.py' -o -name 'forms.py' -o -name 'models.py' -o -name 'settings.py' -o -name 'urls.py' -o -name 'views.py' \) -exec pylint {} + | grep "Your code has been rated at" | grep -o -E '[0-9]+\.[0-9]+')
+          echo "Pylint score: $score"
+          echo "##[set-output name=score;]$score"
+
+      - uses: Silleellie/pylint-github-action@v2
+        with:
+          lint-path: '*.py'
+          python-version: 3.11
         
-  badge_job:
-    runs-on: ubuntu-latest
-    steps:
-      - id: date
-        run: echo "##[set-output name=data;]$(pylint)"
-      - name: Pylint badge
+      - name: Update pylint score badge
         uses: RubbaBoy/BYOB@v1.3.0
         with:
-          NAME: pylint
-          LABEL: 'Updated at'
-          STATUS: ${{ steps.pylint.outputs.data }}
-          COLOR: 00EEFF
+          NAME: pylint_score
+          LABEL: 'Pylint Score'
+          STATUS: ${{ steps.pylint.outputs.score }}
+          COLOR: 'green'
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
