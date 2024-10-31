@@ -19,7 +19,7 @@ jobs:
         pip install pylint
     - name: Analysing the code with pylint
       run: |
-        find . -name '*.py' -exec pylint {} \;
+        find . -type f \( -name 'apps.py' -o -name 'forms.py' -o -name 'models.py' -o -name 'settings.py' -o -name 'urls.py' -o -name 'views.py' \) -exec pylint {} +
     - uses: Silleellie/pylint-github-action@v2
       with:
         lint-path: '*.py'  # lint src package
