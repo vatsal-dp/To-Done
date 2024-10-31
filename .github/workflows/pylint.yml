@@ -33,7 +33,7 @@ jobs:
       - name: Pylint badge
         uses: RubbaBoy/BYOB@v1.3.0
         with:
-          NAME: time
+          NAME: pylint
           LABEL: 'Updated at'
           STATUS: ${{ steps.pylint.outputs.data }}
           COLOR: 00EEFF
