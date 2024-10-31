@@ -157,3 +157,4 @@ class TestModels(TestCase):
         templates = Template.objects.filter(user_id=self.user)
         self.assertEqual(templates.count(), 2)
         self.assertIn(template2, templates)
+    

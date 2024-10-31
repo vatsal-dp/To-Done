@@ -492,3 +492,8 @@ class TestViews(TestCase):
         request.user = self.user
         response = checkForNotifications(request)
         self.assertEqual(response.status_code, 200)
+
+
+
+
+

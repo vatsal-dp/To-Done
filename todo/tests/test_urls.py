@@ -96,3 +96,4 @@ class TestURLs(SimpleTestCase):
         url = reverse('todo:password_reset')
         self.assertEqual(resolve(url).func, password_reset_request)
 
+
