@@ -5,6 +5,9 @@ from pytz import timezone as pytz_timezone
 
 desired_timezone = pytz_timezone('America/New_York')
 
+class TodoTemplate(models.Model):
+    # Other fields
+    due_date = models.DateField(null=True, blank=True)
 class List(models.Model):
     title_text = models.CharField(max_length=100)
     created_on = models.DateTimeField()
