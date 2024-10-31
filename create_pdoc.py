@@ -1,17 +1,18 @@
-from pdoc.cli import *
+import os
+import shutil
+import pdoc
+from pathlib import Path
 
-OUTPUT_DIR = "./docs"
+OUTPUT_DIR = Path("./docs/todo")
 
-# Programmatically provide settings module
+if OUTPUT_DIR.exists():
+    shutil.rmtree(OUTPUT_DIR)
+OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
+
 SETTINGS_MODULE = "smarttodo.settings"
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', SETTINGS_MODULE)
 
-# Setup Django
 import django
-
 django.setup()
 
-cmdline_args = ["--html", "-o", OUTPUT_DIR, "./todo"]
-
-if __name__ == "__main__":
-    main(parser.parse_args(cmdline_args))
+pdoc.pdoc("todo", output_directory=OUTPUT_DIR)
