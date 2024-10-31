@@ -1,3 +1,4 @@
+import os
 import pdoc
 
 OUTPUT_DIR = "./docs"
