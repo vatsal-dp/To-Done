@@ -24,18 +24,13 @@ jobs:
         run: |
           score=$(find . -type f \( -name 'apps.py' -o -name 'forms.py' -o -name 'models.py' -o -name 'settings.py' -o -name 'urls.py' -o -name 'views.py' \) -exec pylint {} + | grep "Your code has been rated at" | grep -o -E '[0-9]+\.[0-9]+')
           echo "Pylint score: $score"
-          echo "##[set-output name=score;]$score"
+          echo "score=$score" >> $GITHUB_ENV
 
-      - uses: Silleellie/pylint-github-action@v2
-        with:
-          lint-path: '*.py'
-          python-version: 3.11
-        
       - name: Update pylint score badge
         uses: RubbaBoy/BYOB@v1.3.0
         with:
           NAME: pylint_score
           LABEL: 'Pylint Score'
-          STATUS: ${{ steps.pylint.outputs.score }}
+          STATUS: ${{ env.score }}
           COLOR: 'green'
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
