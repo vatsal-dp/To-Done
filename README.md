@@ -67,11 +67,11 @@ We wanted to work on something that is:
  * [On-time metrics]
  * [Tasks sorted by due date]
  * [Dark Mode]
- * [Default templates]
  * [Priority Tracker]
 
 ### Upcoming Features
  * Social login
+ * Default templates
  * Export and import to-do lists
  * Gamification - earn points by finishing your tasks, show-off your productivity in social media
  * [List of All Planned Features for Second Phase](https://github.com/users/shahleon/projects/2/views/6)
