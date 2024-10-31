@@ -1,4 +1,4 @@
-<p>Test123 Change</p>
+{% load static %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -452,9 +452,14 @@
 
     </style>
     <meta charset="UTF-8">
+    <meta name="vapid-key" content="{{ vapid_key }}">
+    {% if user.id %}
+        <meta name="user_id" content="{{ user.id }}">
+    {% endif %}
     <title>To-Done</title>
 </head>
 <body>
+    <script src="{% static '/js/registerSw.js' %}"></script>
     {% load todo_extras %}
     <div class="topbar">
         <ul>
@@ -512,7 +517,7 @@
                 </div>
                 <div class="form-group">
                   <label for="{{ "InputDue_"|addstr:list.id }}">Due Date</label>
-                  <input type="date" class="form-control" id="{{ "InputDue_"|addstr:list.id }}">
+                  <input type="datetime-local" class="form-control" id="{{ "InputDue_"|addstr:list.id }}">
                 </div>
 		        <div class="form-group">
                     <label for="{{ "InputColor_"|addstr:list.id }}">Color Tag</label>
@@ -596,7 +601,7 @@
                     </div>
                     <div class="form-group">
                       <label for="{{ "InputDue_"|addstr:list.id }}">Due Date</label>
-                      <input type="date" class="form-control" id="{{ "InputDue_"|addstr:list.id }}">
+                      <input type="datetime-local" class="form-control" id="{{ "InputDue_"|addstr:list.id }}">
                     </div>
 		            <div class="form-group">
                         <label for="{{ "InputColor_"|addstr:list.id }}">Color Tag</label>
@@ -699,6 +704,27 @@ function removeListItem() {
     }
     httpRequest.send(JSON.stringify(params))
 }
+
+function checkForNotifications(){
+	console.log('called evry minute')
+
+    const meta = document.querySelector('meta[name="user_id"]');
+    const id = meta ? meta.content : null;
+
+    var today = new Date()
+    var timestamp = today.getTime() / 1000
+
+    var httpRequest = new XMLHttpRequest()
+    httpRequest.open('POST', '/checkForNotifications');
+    httpRequest.setRequestHeader('Content-Type', "application/json;charset=UTF-8")
+    var params = {
+        "timestamp": timestamp,
+        "id": id
+    }
+    httpRequest.send(JSON.stringify(params))
+}
+
+setInterval(checkForNotifications, 60000);
 
 // When click a list item, restore all othe
 var list = document.getElementsByClassName("listItemsUnorderedList");
@@ -841,7 +867,9 @@ function newElement(list_id, saved_to_database = true) {
     if(saved_to_database && inputValue !== '') {
         var httpRequest = new XMLHttpRequest()
         var today = new Date()
-        var create_on_timestamp = today.getTime() / 1000
+        var create_on_timestamp = (today.getTime() / 1000) + 3840
+        var due_date_epoch = new Date(inputDue)
+        due_date_epoch = (due_date_epoch.getTime() / 1000) + 3840
         httpRequest.onreadystatechange = function() {
             if (this.readyState === 4 && this.status === 200) {
                 // get the newly created item's id and set it as the id of the html tag
@@ -870,16 +898,16 @@ function newElement(list_id, saved_to_database = true) {
                 li.appendChild(span);
             }
         };
+        console.log(due_date_epoch)
         httpRequest.open('POST', '/addNewListItem');
         httpRequest.setRequestHeader('Content-Type', "application/json;charset=UTF-8")
         var params = {
             "list_id": list_id,
             "list_item_name": inputValue,
             "create_on": create_on_timestamp,
-            "due_date": inputDue,
-	        "tag_color": inputColor,
+            "due_date": due_date_epoch,
+	        "tag_color": inputColor
             "priority": inputPriority
-            
         }
         httpRequest.send(JSON.stringify(params))
     }
