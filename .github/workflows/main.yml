@@ -17,9 +17,6 @@ jobs:
       with:
         node-version: 16.x
 
-    - name: npm install
-      run: npm install
-
     - name: Test ${{ matrix.test_number }}
       run: make test-coverage-${{ matrix.test_number }}
     - name: Coveralls Parallel
