@@ -1,9 +1,12 @@
 import datetime
 import json
+import pytz
+import calendar, time
 
 from django.shortcuts import render, redirect, get_object_or_404, get_list_or_404
 from django.http import HttpResponse, JsonResponse, Http404
 from django.views.decorators.csrf import csrf_exempt
+from django.views.decorators.http import require_GET, require_POST
 from django.db import transaction, IntegrityError
 from django.utils import timezone
 
@@ -25,6 +28,9 @@ from django.contrib.auth.tokens import default_token_generator
 from django.utils.encoding import force_bytes
 from django.core.mail import EmailMessage
 
+# Import for notifications
+from webpush import send_user_notification
+
 
 # Render the home page with users' to-do lists
 def index(request, list_id=0):
@@ -32,6 +38,10 @@ def index(request, list_id=0):
         return redirect("/login")
     
     shared_list = []
+
+    webpush_settings = getattr(settings, 'WEBPUSH_SETTINGS', {})
+    vapid_key = webpush_settings.get('VAPID_PUBLIC_KEY')
+    user = request.user
 
     if list_id != 0:
         # latest_lists = List.objects.filter(id=list_id, user_id_id=request.user.id)
@@ -61,7 +71,8 @@ def index(request, list_id=0):
                 if query_list:
                     shared_list.append(query_list)
         
-    latest_list_items = ListItem.objects.order_by('list_id')
+
+    latest_list_items = ListItem.objects.order_by('-due_date')
     saved_templates = Template.objects.filter(user_id_id=request.user.id).order_by('created_on')
     list_tags = ListTags.objects.filter(user_id=request.user.id).order_by('created_on')
     
@@ -73,7 +84,7 @@ def index(request, list_id=0):
     avg_completion_time = completed_tasks.aggregate(Avg('completion_time'))['completion_time__avg'] or 0
 
     # change color when is or over due
-    cur_date = datetime.date.today()
+    cur_date = datetime.datetime.now().replace(tzinfo=pytz.UTC) + datetime.timedelta(minutes=60)
     for list_item in latest_list_items:       
         list_item.color = "#FF0000" if cur_date > list_item.due_date else "#000000"
             
@@ -83,6 +94,8 @@ def index(request, list_id=0):
         'templates': saved_templates,
         'list_tags': list_tags,
         'shared_list': shared_list,
+        'user': user,
+        'vapid_key': vapid_key,
         'on_time_rate': (on_time_tasks / total_completed_tasks * 100) if total_completed_tasks > 0 else 0,
         'avg_delay': avg_delay,
         'avg_completion_time': avg_completion_time,
@@ -220,17 +233,21 @@ def addNewListItem(request):
         list_id = body['list_id']
         item_name = body['list_item_name']
         create_on = body['create_on']
-        create_on_time = datetime.datetime.fromtimestamp(create_on)
-        finished_on_time = datetime.datetime.fromtimestamp(create_on)
+        eastern = pytz.timezone('US/Eastern')
+        create_on_time = datetime.datetime.fromtimestamp(create_on).replace(tzinfo=eastern)
+        finished_on_time = datetime.datetime.fromtimestamp(create_on).replace(tzinfo=eastern)
         due_date = body['due_date']
         tag_color = body['tag_color']
-        print(item_name)
-        print(create_on)
+        priority = body.get('priority', 2)
+        due_date_on_time = datetime.datetime.fromtimestamp(due_date).replace(tzinfo=eastern)
+        # print(item_name)
+        # print(create_on)
+        print(due_date)
         result_item_id = -1
         # create a new to-do list object and save it to the database
         try:
             with transaction.atomic():
-                todo_list_item = ListItem(item_name=item_name, created_on=create_on_time, finished_on=finished_on_time, due_date=due_date, tag_color=tag_color, list_id=list_id, item_text="", is_done=False)
+                todo_list_item = ListItem(item_name=item_name, created_on=create_on_time, finished_on=finished_on_time, due_date=due_date_on_time, tag_color=tag_color, list_id=list_id, item_text="", priority = priority, is_done=False)
                 todo_list_item.save()
                 result_item_id = todo_list_item.id
         except IntegrityError:
@@ -363,6 +380,7 @@ def getListItemById(request):
 def createNewTodoList(request):
 
     if not request.user.is_authenticated:
+        print("user is not authenticated")
         return redirect("/login")
 
     if request.method == 'POST':
@@ -374,7 +392,7 @@ def createNewTodoList(request):
         shared_user = body['shared_user']
         user_not_found = []
         print(shared_user)
-        create_on_time = datetime.datetime.fromtimestamp(create_on)
+        create_on_time = timezone.make_aware(datetime.datetime.fromtimestamp(create_on))
         # print(list_name)
         # print(create_on)
         # create a new to-do list object and save it to the database
@@ -440,6 +458,78 @@ def createNewTodoList(request):
     else:
         return HttpResponse("Request method is not a Post")
 
+# Send a push notification to a user
+@require_POST
+@csrf_exempt
+def send_push(request):
+    try:
+        body = request.body
+        data = json.loads(body)
+
+        if 'head' not in data or 'body' not in data or 'id' not in data:
+            return JsonResponse(status=400, data={"message": "Invalid data format"})
+
+        user_id = data['id']
+        user = get_object_or_404(User, pk=user_id)
+        payload = {'head': data['head'], 'body': data['body']}
+        send_user_notification(user=user, payload=payload, ttl=1000)
+
+        return JsonResponse(status=200, data={"message": "Web push successful"})
+    except TypeError:
+        return JsonResponse(status=500, data={"message": "An error occurred"})
+    
+# Send a push notification to a user
+@require_POST
+@csrf_exempt
+def checkForNotifications(request):
+    try:
+        body = request.body
+        data = json.loads(body)
+
+        if 'timestamp' not in data or 'id' not in data:
+            return JsonResponse(status=400, data={"message": "Invalid data format"})
+
+        timestamp = data['timestamp']
+        user_id = data['id']
+        user = get_object_or_404(User, pk=user_id)
+
+        allItems = []
+
+        # shared_list = SharedList.objects.filter(user=User.objects.get(request.user.id))
+        eastern = pytz.timezone('US/Eastern')
+        latest_lists = List.objects.filter(user_id=request.user.id).order_by('-updated_on')
+        # cur_date = datetime.datetime.now(eastern).replace(tzinfo=pytz.UTC)
+        cur_date = datetime.datetime.now().replace(tzinfo=pytz.UTC, second=0, microsecond=0) + datetime.timedelta(hours=1)
+
+        for list in latest_lists:
+            # print(list)
+            allItems = ListItem.objects.filter(list=list).order_by('list_id')
+            for item in allItems:
+                # realDueDate = item.due_date
+                realDueDate = item.due_date - datetime.timedelta(hours=5)
+                # realDueDate_epoch = calendar.timegm(time.strptime(realDueDate, '%Y-%m-%d %H:%M:%S'))
+                print(cur_date, " - ", realDueDate, ": ", realDueDate - cur_date, " ?= ", datetime.timedelta(minutes=30))
+                if  realDueDate - cur_date == datetime.timedelta(minutes=30):
+                    message = "{} will be due in 30 minutes".format(item.item_name)
+                    payload = {'head': item.item_name, 'body': message}
+                    send_user_notification(user=user, payload=payload, ttl=1000)
+                    print("TRUE")
+
+        # for list_item in latest_list_items:
+        #     print(list_item.due_date)
+
+        # print (latest_list_items)
+        # print(shared_list)
+        # shared_list = SharedList(user=User.objects.get(request.user), shared_list_id="")
+        # print(shared_list)
+
+        # user = get_object_or_404(User, pk=user_id)
+        # payload = {'head': data['head'], 'body': data['body']}
+        # send_user_notification(user=user, payload=payload, ttl=1000)
+
+        return JsonResponse(status=200, data={"message": "Web push successful"})
+    except TypeError:
+        return JsonResponse(status=500, data={"message": "An error occurred"})
 
 # Register a new user account
 def register_request(request):

@@ -28,6 +28,11 @@ class ListTags(models.Model):
 
 class ListItem(models.Model):
     # the name of a list item
+    PRIORITY_CHOICES = [(1, 'High'), (2, 'Medium'), (3, 'Low')]
+    priority = models.PositiveSmallIntegerField(
+        choices = PRIORITY_CHOICES,
+        default = 2
+    )
     item_name = models.CharField(max_length=50, null=True, blank=True)
     # the text note of a list item
     item_text = models.CharField(max_length=100)
@@ -35,7 +40,7 @@ class ListItem(models.Model):
     created_on = models.DateTimeField()
     list = models.ForeignKey(List, on_delete=models.CASCADE)
     finished_on = models.DateTimeField()
-    due_date = models.DateField()
+    due_date = models.DateTimeField()
     tag_color = models.CharField(max_length=10)
     delay = models.IntegerField(default=0)
     completion_time = models.IntegerField(default=0)
