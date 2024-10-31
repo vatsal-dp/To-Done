@@ -1,7 +1,7 @@
 import os
 import pdoc
 
-OUTPUT_DIR = "./docs"
+OUTPUT_DIR = "./docs/todo"
 
 # Programmatically provide settings module
 SETTINGS_MODULE = "smarttodo.settings"
@@ -12,6 +12,8 @@ import django
 
 django.setup()
 
-doc = pdoc.pdoc("todo")
-with open(os.path.join(OUTPUT_DIR, "todo.html"), "w") as file:
-    file.write(doc)
+# Ensure the output directory exists
+os.makedirs(OUTPUT_DIR, exist_ok=True)
+
+# Generate HTML documentation and output to the specified directory
+pdoc.pdoc("todo", output_directory=OUTPUT_DIR, format="html")
