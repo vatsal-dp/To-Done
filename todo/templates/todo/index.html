@@ -688,7 +688,7 @@
         </ul>
     {% endif %}
 </body>
-<script>
+<script defer>
 // Click on a close button to hide the current list item
 var close = document.getElementsByClassName("close");
 var i;
@@ -913,7 +913,7 @@ function newElement(list_id, saved_to_database = true) {
             "list_item_name": inputValue,
             "create_on": create_on_timestamp,
             "due_date": due_date_epoch,
-	        "tag_color": inputColor
+	        "tag_color": inputColor,
             "priority": inputPriority
         }
         httpRequest.send(JSON.stringify(params))
