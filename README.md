@@ -8,7 +8,8 @@
 [![Python 3.8](https://img.shields.io/badge/python-3.8-blue.svg)](https://www.python.org/downloads/release/python-380/)
 [![Django 4.1](https://img.shields.io/badge/django-4.1-blue.svg)](https://docs.djangoproject.com/en/4.1/releases/4.1/)
 [![DOI](https://zenodo.org/badge/878680678.svg)](https://doi.org/10.5281/zenodo.14016079)
-![Pylint Score](https://img.shields.io/badge/pylint-score-inactive)
+![Pylint Score](https://byob.yarr.is/CSC510-Team-57/To-Done/pylint_score)
+
 
 # TO-DONE
 
