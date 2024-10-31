@@ -489,6 +489,13 @@
         <input type="hidden" id="newListTag" placeholder="New List tag">
         <input type="text" id="sharedUser" placeholder="Share this list with...">
         <span onclick="newTodoList()" class="addTodoList">Add</span>
+
+        <div class="metrics">
+            <h3>Task Completion Metrics</h3>
+            <p>On-Time Completion Rate: {{ on_time_rate }}%</p>
+            <p>Average Delay for Late Tasks: {{ avg_delay }} days</p>
+            <p>Average Completion Time: {{ avg_completion_time }} days</p>
+        </div>
     </div>
 
     <div class="main">

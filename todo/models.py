@@ -1,5 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import User
+from django.utils import timezone
 
 class List(models.Model):
     title_text = models.CharField(max_length=100)
@@ -41,11 +42,26 @@ class ListItem(models.Model):
     finished_on = models.DateTimeField()
     due_date = models.DateTimeField()
     tag_color = models.CharField(max_length=10)
+    delay = models.IntegerField(default=0)
+    completion_time = models.IntegerField(default=0)
 
     objects = models.Manager()
 
     def __str__(self):
         return "%s: %s" % (str(self.item_text), self.is_done)
+    
+    def calculate_delay(self):
+        if self.is_done and self.finished_on and self.due_date:
+            delay_days = (self.finished_on.date() - self.due_date).days # This is getting the delay in days
+            if delay_days >= 0:
+                self.delay = delay_days
+
+    def calculate_completion_time(self):
+        if self.is_done and self.finished_on and self.created_on:
+            # Chat GPT Assisted in making timezone aware
+            finished_on = timezone.make_aware(self.finished_on) if timezone.is_naive(self.finished_on) else self.finished_on
+            created_on = timezone.make_aware(self.created_on) if timezone.is_naive(self.created_on) else self.created_on
+            self.completion_time = (finished_on - created_on).days
 
 
 class Template(models.Model):

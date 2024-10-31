@@ -22,6 +22,7 @@ from django.contrib.auth.forms import PasswordResetForm
 from django.contrib.auth.models import User
 from django.template.loader import render_to_string
 from django.db.models.query_utils import Q
+from django.db.models import Avg
 from django.utils.http import urlsafe_base64_encode
 from django.contrib.auth.tokens import default_token_generator
 from django.utils.encoding import force_bytes
@@ -75,6 +76,13 @@ def index(request, list_id=0):
     saved_templates = Template.objects.filter(user_id_id=request.user.id).order_by('created_on')
     list_tags = ListTags.objects.filter(user_id=request.user.id).order_by('created_on')
     
+    # Chat GPT Assisted with some of the fields
+    completed_tasks = ListItem.objects.filter(is_done=True, list__user_id=request.user)
+    on_time_tasks = completed_tasks.filter(delay=0).count()
+    total_completed_tasks = completed_tasks.count()
+    avg_delay = completed_tasks.aggregate(Avg('delay'))['delay__avg'] or 0
+    avg_completion_time = completed_tasks.aggregate(Avg('completion_time'))['completion_time__avg'] or 0
+
     # change color when is or over due
     cur_date = datetime.datetime.now().replace(tzinfo=pytz.UTC) + datetime.timedelta(minutes=60)
     for list_item in latest_list_items:       
@@ -87,7 +95,10 @@ def index(request, list_id=0):
         'list_tags': list_tags,
         'shared_list': shared_list,
         'user': user,
-        'vapid_key': vapid_key
+        'vapid_key': vapid_key,
+        'on_time_rate': (on_time_tasks / total_completed_tasks * 100) if total_completed_tasks > 0 else 0,
+        'avg_delay': avg_delay,
+        'avg_completion_time': avg_completion_time,
     }
     return render(request, 'todo/index.html', context)
 
@@ -275,6 +286,10 @@ def markListItem(request):
                 query_item = ListItem.objects.get(id=list_item_id)
                 query_item.is_done = list_item_is_done
                 query_item.finished_on = finished_on_time
+
+                if query_item.is_done:
+                    query_item.calculate_delay()
+                    query_item.calculate_completion_time()
                 query_item.save()
                 # Sending an success response
                 return JsonResponse({'item_name': query_item.item_name, 'list_name': query_list.title_text, 'item_text': query_item.item_text})
