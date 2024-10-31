@@ -27,6 +27,11 @@ class ListTags(models.Model):
 
 class ListItem(models.Model):
     # the name of a list item
+    PRIORITY_CHOICES = [(1, 'High'), (2, 'Medium'), (3, 'Low')]
+    priority = models.PositiveSmallIntegerField(
+        choices = PRIORITY_CHOICES,
+        default = 2
+    )
     item_name = models.CharField(max_length=50, null=True, blank=True)
     # the text note of a list item
     item_text = models.CharField(max_length=100)

@@ -227,6 +227,7 @@ def addNewListItem(request):
         finished_on_time = datetime.datetime.fromtimestamp(create_on).replace(tzinfo=eastern)
         due_date = body['due_date']
         tag_color = body['tag_color']
+        priority = body.get('priority', 2)
         due_date_on_time = datetime.datetime.fromtimestamp(due_date).replace(tzinfo=eastern)
         # print(item_name)
         # print(create_on)
@@ -235,7 +236,7 @@ def addNewListItem(request):
         # create a new to-do list object and save it to the database
         try:
             with transaction.atomic():
-                todo_list_item = ListItem(item_name=item_name, created_on=create_on_time, finished_on=finished_on_time, due_date=due_date_on_time, tag_color=tag_color, list_id=list_id, item_text="", is_done=False)
+                todo_list_item = ListItem(item_name=item_name, created_on=create_on_time, finished_on=finished_on_time, due_date=due_date_on_time, tag_color=tag_color, list_id=list_id, item_text="", priority = priority, is_done=False)
                 todo_list_item.save()
                 result_item_id = todo_list_item.id
         except IntegrityError:
@@ -264,7 +265,7 @@ def markListItem(request):
         list_item_is_done = True
         is_done_str = str(body['is_done'])
         finish_on = body['finish_on']
-        finished_on_time = datetime.datetime.fromtimestamp(finish_on)
+        finished_on_time = timezone.make_aware(datetime.datetime.fromtimestamp(finish_on))
         print("is_done: " + str(body['is_done']))
         if is_done_str == "0" or is_done_str == "False" or is_done_str == "false":
             list_item_is_done = False
@@ -376,7 +377,7 @@ def createNewTodoList(request):
         shared_user = body['shared_user']
         user_not_found = []
         print(shared_user)
-        create_on_time = datetime.datetime.fromtimestamp(create_on)
+        create_on_time = timezone.make_aware(datetime.datetime.fromtimestamp(create_on))
         # print(list_name)
         # print(create_on)
         # create a new to-do list object and save it to the database
