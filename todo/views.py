@@ -190,7 +190,7 @@ def removeListItem(request):
         body_unicode = request.body.decode('utf-8')
         body = json.loads(body_unicode)
         list_item_id = body['list_item_id']
-        print("list_item_id: ", list_item_id)
+        #print("list_item_id: ", list_item_id)
         try:
             with transaction.atomic():
                 being_removed_item = ListItem.objects.get(id=list_item_id)
@@ -210,8 +210,8 @@ def updateListItem(request, item_id):
     if request.method == 'POST':
         updated_text = request.POST['note']
         # print(request.POST)
-        print(updated_text)
-        print(item_id)
+        #print(updated_text)
+        #print(item_id)
         if item_id <= 0:
             return redirect("index")
         try:
@@ -247,7 +247,7 @@ def addNewListItem(request):
         due_date_on_time = datetime.datetime.fromtimestamp(due_date).replace(tzinfo=eastern)
         # print(item_name)
         # print(create_on)
-        print(due_date)
+        #print(due_date)
         result_item_id = -1
         # create a new to-do list object and save it to the database
         try:
@@ -282,8 +282,8 @@ def markListItem(request):
         list_item_is_done = True
         is_done_str = str(body['is_done'])
         finish_on = body['finish_on']
-        finished_on_time = timezone.make_aware(datetime.datetime.fromtimestamp(finish_on))
-        print("is_done: " + str(body['is_done']))
+        finished_on_time = timezone.now()
+        #print("is_done: " + str(body['is_done']))
         if is_done_str == "0" or is_done_str == "False" or is_done_str == "false":
             list_item_is_done = False
         try:
@@ -340,8 +340,8 @@ def getListItemByName(request):
         # remove the first " and last "
         # list_item_name = list_item_name
 
-        print("list_id: " + list_id)
-        print("list_item_name: " + list_item_name)
+        #print("list_id: " + list_id)
+        #print("list_item_name: " + list_item_name)
         try:
             with transaction.atomic():
                 query_list = List.objects.get(id=list_id)
@@ -371,22 +371,22 @@ def getListItemById(request):
         list_item_name = body['list_item_name']
         list_item_id = body['list_item_id']
 
-        print("list_id: " + list_id)
-        print("list_item_name: " + list_item_name)
-        print("list_item_id: " + list_item_id)
+        #print("list_id: " + list_id)
+        #print("list_item_name: " + list_item_name)
+        #print("list_item_id: " + list_item_id)
 
         try:
             with transaction.atomic():
                 query_list = List.objects.get(id=list_id)
                 query_item = ListItem.objects.get(id=list_item_id)
-                print("item_text", query_item.item_text)
+                #print("item_text", query_item.item_text)
                 # Sending an success response
                 return JsonResponse({'item_id': query_item.id,
                                       'item_name': query_item.item_name,
                                         'list_name': query_list.title_text,
                                           'item_text': query_item.item_text})
         except IntegrityError:
-            print("query list item" + str(list_item_name) + " failed!")
+            #print("query list item" + str(list_item_name) + " failed!")
             JsonResponse({})
     else:
         return JsonResponse({'result': 'get'})  # Sending an success response
@@ -398,7 +398,6 @@ def createNewTodoList(request):
     """Create a new to-do list, called by javascript function"""
 
     if not request.user.is_authenticated:
-        print("user is not authenticated")
         return redirect("/login")
 
     if request.method == 'POST':
@@ -409,7 +408,7 @@ def createNewTodoList(request):
         tag_name = body['list_tag']
         shared_user = body['shared_user']
         user_not_found = []
-        print(shared_user)
+        #print(shared_user)
         create_on_time = timezone.make_aware(datetime.datetime.fromtimestamp(create_on))
         # print(list_name)
         # print(create_on)
@@ -431,7 +430,7 @@ def createNewTodoList(request):
                     new_tag.save()
 
                 todo_list.save()
-                print(todo_list.id)
+                #print(todo_list.id)
 
                 # Progress
                 if body['shared_user']:
@@ -455,7 +454,7 @@ def createNewTodoList(request):
                             i += 1
 
                         else:
-                            print("No user named " + user_list[i] + " found!")
+                            #print("No user named " + user_list[i] + " found!")
                             user_not_found.append(user_list[i])
                             user_list.remove(user_list[i])
                             k -= 1
@@ -464,7 +463,7 @@ def createNewTodoList(request):
                     new_shared_user = SharedUsers(list_id=todo_list, shared_user=shared_user)
                     new_shared_user.save()
 
-                    print(user_not_found)
+                    #print(user_not_found)
 
                     if user_list:
                         List.objects.filter(id=todo_list.id).update(is_shared=True)
@@ -534,12 +533,12 @@ def checkForNotifications(request):
                 # realDueDate = item.due_date
                 realDueDate = item.due_date - datetime.timedelta(hours=5)
                 # realDueDate_epoch = calendar.timegm(time.strptime(realDueDate, '%Y-%m-%d %H:%M:%S'))
-                print(cur_date, " - ", realDueDate, ": ", realDueDate - cur_date, " ?= ", datetime.timedelta(minutes=30))
+                #(cur_date, " - ", realDueDate, ": ", realDueDate - cur_date, " ?= ", datetime.timedelta(minutes=30))
                 if  realDueDate - cur_date == datetime.timedelta(minutes=30):
                     message = "{} will be due in 30 minutes".format(item.item_name)
                     payload = {'head': item.item_name, 'body': message}
                     send_user_notification(user=user, payload=payload, ttl=1000)
-                    print("TRUE")
+                    #print("TRUE")
 
         # for list_item in latest_list_items:
         #     print(list_item.due_date)
@@ -564,7 +563,7 @@ def register_request(request):
         form = NewUserForm(request.POST)
         if form.is_valid():
             user = form.save()
-            print(user)
+            #print(user)
 
             # Add a empty list to SharedList table
             shared_list = SharedList(user=User.objects.get(username=user), shared_list_id="")

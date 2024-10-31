@@ -23,7 +23,7 @@ class TestViews(TestCase):
         request.user = self.user
         post = request.POST.copy()  # to make it mutable
         post['todo'] = 1
-        print(request)
+        #print(request)
         request.POST = post
         response = login_request(request)
         self.assertEqual(response.status_code, 200)
@@ -71,8 +71,8 @@ class TestViews(TestCase):
         request.POST = post
         request.method = "POST"
         response = getListTagsByUserid(request)
-        print('response:')
-        print(response)
+        #print('response:')
+        #print(response)
         self.assertIsNotNone(response)
 
     def test_index(self):
@@ -84,7 +84,7 @@ class TestViews(TestCase):
     def test_template_from_todo_redirect(self):
         client = self.client
         response = client.get(reverse('todo:template_from_todo'))
-        self.assertEquals(response.status_code, 302)
+        self.assertEqual(response.status_code, 302)
 
     def test_template_from_todo_function(self):
         request = self.factory.get('/todo/')
@@ -161,7 +161,7 @@ class TestViews(TestCase):
         request.method = "POST"
         request._body = json.dumps({ "list_item_id": 1 }).encode('utf-8')
         response = removeListItem(request)
-        print(response)
+        #print(response)
         self.assertIsNotNone(response)
         
         
@@ -179,11 +179,13 @@ class TestViews(TestCase):
         user_id_id=self.user.id,
         )
 
+        due_date_timestamp = int(timezone.now().timestamp())
+
         params = { 
             'list_id': todo.id,
             'list_item_name': "random", 
             "create_on": 1670292391,
-            "due_date": "2023-01-01",
+            "due_date": due_date_timestamp,
             "tag_color": "#f9f9f9",
             "item_text": "",
             "is_done": False
@@ -193,7 +195,7 @@ class TestViews(TestCase):
                                 content_type="application/json")
         request.user = self.user
         # request.method = "POST"
-        print(type(params))
+        #print(type(params))
         # param = json.dumps(param,cls=DateTimeEncoder)
         # request._body = json.dumps(params, separators=(',', ':')).encode('utf-8')
         temp = addNewListItem(request)
