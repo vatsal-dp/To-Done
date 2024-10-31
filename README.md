@@ -4,7 +4,7 @@
 <h2 align="center">The Only Todo List You Need</h2>
 
 [![Build Status](https://github.com/Chloe-Ku/smart-todo/actions/workflows/django.yml/badge.svg)](https://github.com/Chloe-Ku/smart-todo/actions/workflows/django.yml)
-[![Coverage Status](https://coveralls.io/repos/github/Chloe-Ku/smart-todo/badge.svg?branch=main)](https://coveralls.io/github/Chloe-Ku/smart-todo?branch=main)
+[![Coverage Status](https://coveralls.io/repos/github/CSC510-Team-57/To-Done/badge.svg?branch=main)](https://coveralls.io/github/CSC510-Team-57/To-Done?branch=main)
 [![license badge](https://img.shields.io/badge/License-MIT-green.svg)](https://github.com/Chloe-Ku/smart-todo/blob/main/LICENSE)
 [![issues badge](https://img.shields.io/github/issues/Chloe-Ku/smart-todo)](https://github.com/Chloe-Ku/smart-todo/issues)
 [![Python 3.8](https://img.shields.io/badge/python-3.8-blue.svg)](https://www.python.org/downloads/release/python-380/)
