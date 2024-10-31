@@ -22,10 +22,6 @@ jobs:
       - name: Analyse the code with pylint
         id: pylint
         run: |
-          find . -type f \( -name 'apps.py' -o -name 'forms.py' -o -name 'models.py' -o -name 'settings.py' -o -name 'urls.py' -o -name 'views.py' \) -print0 | while IFS= read -r -d '' file; do
-            echo "Running pylint on $file"
-            pylint "$file" | grep "Your code has been rated at" | grep -o -E '[0-9]+\.[0-9]+'
-          done
           score=$(find . -type f \( -name 'apps.py' -o -name 'forms.py' -o -name 'models.py' -o -name 'settings.py' -o -name 'urls.py' -o -name 'views.py' \) -exec pylint {} + | grep "Your code has been rated at" | grep -o -E '[0-9]+\.[0-9]+')
           echo "Pylint score: $score"
           echo "score=$score" >> $GITHUB_ENV
