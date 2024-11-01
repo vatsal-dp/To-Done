@@ -19,6 +19,7 @@
         cursor: pointer;
         transition: background-color 0.3s ease, color 0.3s ease, transform 0.2s ease;
         box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.2);
+        margin-right: 10px
     }
 
     /* Hover and Active Effects for the Button */
@@ -597,7 +598,7 @@
             <li><a class="tabs" href="/templates">Templates</a></li>
         </ul>
 
-		<ul style="float: right;">
+		<ul style="float: right;display: flex;align-items: center">
 		{% if user.is_authenticated %}
             <li><a href="#">Welcome, {{user.username}}</a></li>
 		  <li><a class="tabs" href="/logout">Logout</a></li>
@@ -799,7 +800,7 @@
         {% if not latest_lists %}
             {% if not shared_list %}
         <div class="header">
-            <h2 id="noListYet">You don't hava any todo list!</h2>
+            <h2 id="noListYet">You don't have any todo lists!</h2>
         </div>
             {% endif %}
         {% endif %}
