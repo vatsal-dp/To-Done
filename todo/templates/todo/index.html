@@ -579,6 +579,12 @@
             padding-left: 5px;
         }
 
+        #darkModeBox {
+            color: red;
+            hidden: false;
+            height 100%;
+        }
+
     </style>
     <meta charset="UTF-8">
     <meta name="vapid-key" content="{{ vapid_key }}">
@@ -597,14 +603,14 @@
             <li><a class="tabs" href="/templates">Templates</a></li>
         </ul>
 
-		<ul style="float: right;">
+		<ul style="float: right;display: flex;align-items: center;margin-right: 10px;">
 		{% if user.is_authenticated %}
             <li><a href="#">Welcome, {{user.username}}</a></li>
 		  <li><a class="tabs" href="/logout">Logout</a></li>
 		{% else %}
 		  <li><a class="tabs" href="/login">Login</a></li>
 		{% endif %}
-          <li>
+          <li id="darkModeBox">
             <button id="theme-toggle" onclick="toggleDarkMode()">🌙 Dark Mode</button>
           </li>
 		</ul>
@@ -799,7 +805,7 @@
         {% if not latest_lists %}
             {% if not shared_list %}
         <div class="header">
-            <h2 id="noListYet">You don't hava any todo list!</h2>
+            <h2 id="noListYet">You don't have any todo lists!</h2>
         </div>
             {% endif %}
         {% endif %}
