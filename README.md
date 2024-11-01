@@ -16,7 +16,7 @@
 `to-done` lets you manage your todo list effectively with minimal effort. With a minimalistic web interface, 
 you can access your todolist on the go. Use our rich library of templates to create a new todo list very fast or create your own.
 
-### Watch this video to know more about TO-DONE 2.0
+### Watch this video to know more about TO-DONE 3.0
 
 
 https://user-images.githubusercontent.com/23623764/205810552-556e0449-3f81-4e55-ad9a-414de9731b15.mp4
