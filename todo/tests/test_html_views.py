@@ -38,3 +38,22 @@ class HTMLViewsTests(TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertContains(response, '<button id="theme-toggle"', html=False)
         self.assertContains(response, '>🌙 Dark Mode</button>', html=False, msg_prefix="Dark Mode button text is incorrect or missing")
+    def test_template_page_navigation_links(self):
+        response = self.client.get(reverse('todo:template'))
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, '<a href="/">To-Done</a>', msg_prefix="Home link is missing")
+        self.assertContains(response, '<a class="tabs" href="/todo">Lists</a>', msg_prefix="Lists link is missing")
+        self.assertContains(response, '<a class="tabs" href="/templates">Templates</a>', msg_prefix="Templates link is missing")
+    def test_template_page_navigation_links(self):
+        response = self.client.get(reverse('todo:template'))
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, '<a href="/">To-Done</a>', msg_prefix="Home link is missing")
+        self.assertContains(response, '<a class="tabs" href="/todo">Lists</a>', msg_prefix="Lists link is missing")
+        self.assertContains(response, '<a class="tabs" href="/templates">Templates</a>', msg_prefix="Templates link is missing")
+    def test_header_text_on_pages(self):
+        pages = ['todo:index', 'todo:template', 'todo:register']
+        for page in pages:
+            with self.subTest(page=page):
+                response = self.client.get(reverse(page))
+                self.assertEqual(response.status_code, 200)
+                self.assertContains(response, 'To-Done', msg_prefix=f"Header text is missing on {page}")
