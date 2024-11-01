@@ -157,3 +157,37 @@ class TestModels(TestCase):
         templates = Template.objects.filter(user_id=self.user)
         self.assertEqual(templates.count(), 2)
         self.assertIn(template2, templates)
+   
+    def test_create_list(self):
+        list_obj = List.objects.create(title_text="Test List", created_on=timezone.now(), updated_on=timezone.now())
+        self.assertEqual(list_obj.title_text, "Test List")
+
+
+    def test_template_item_due_date_change(self):
+        new_due_date = timezone.now() + timezone.timedelta(days=10)
+        self.template_item.due_date = new_due_date
+        self.template_item.save()
+        self.assertEqual(self.template_item.due_date, new_due_date, "Template item due date not updated correctly")
+
+    def test_list_str_empty_title(self):
+        self.todo_list.title_text = ""
+        self.todo_list.save()
+        self.assertEqual(str(self.todo_list), "", "List with empty title should return empty string as str")
+
+    def test_shared_list_default_id(self):
+        new_shared_list = SharedList.objects.create(user=self.user)
+        self.assertIsNotNone(new_shared_list.shared_list_id, "Shared list ID should not be None after creation")
+
+
+    def test_list_item_tag_color_update(self):
+        new_color = "#00FF00"
+        self.list_item.tag_color = new_color
+        self.list_item.save()
+        self.assertEqual(self.list_item.tag_color, new_color, "List item tag color was not updated")
+
+    
+    def test_list_item_completion_no_delay(self):
+        self.list_item.is_done = True
+        self.list_item.finished_on = self.list_item.due_date 
+        self.list_item.calculate_delay()
+        self.assertEqual(self.list_item.delay, 0, "Delay should be zero when item is completed on due date")

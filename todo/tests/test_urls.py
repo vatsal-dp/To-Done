@@ -1,7 +1,7 @@
 from django.test import SimpleTestCase
 from django.urls import reverse, resolve
 from todo.views import (
-    index, todo_from_template, template_from_todo, delete_todo, 
+    index, template, todo_from_template, template_from_todo, delete_todo, 
     template, updateListItem, removeListItem, createNewTodoList, 
     getListItemByName, getListItemById, markListItem, addNewListItem, 
     send_push, checkForNotifications, register_request, 
@@ -95,4 +95,5 @@ class TestURLs(SimpleTestCase):
     def test_password_reset_url_resolves(self):
         url = reverse('todo:password_reset')
         self.assertEqual(resolve(url).func, password_reset_request)
+
 

@@ -492,3 +492,15 @@ class TestViews(TestCase):
         request.user = self.user
         response = checkForNotifications(request)
         self.assertEqual(response.status_code, 200)
+
+
+
+    def test_index_view(self):
+        response = self.client.get(reverse('todo:index'))
+        self.assertEqual(response.status_code, 200)
+
+    def test_template_view(self):
+        response = self.client.get(reverse('todo:template'))
+        self.assertEqual(response.status_code, 200)
+
+
