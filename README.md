@@ -63,11 +63,11 @@ We wanted to work on something that is:
  * [Add Tags To Todo Lists For Customizable Grouping](#customizable-grouping-tags)
 
 ### New Features
- * [Notifications]
- * [On-time metrics]
- * [Tasks sorted by due date]
- * [Dark Mode]
- * [Priority Tracker]
+ * [Notifications](#notifications)
+ * [On-time metrics](#on-time-metrics)
+ * [Tasks sorted by due date](#tasks-sorted-by-due-date)
+ * [Dark Mode](#dark-mode)
+ * [Priority Tracker](#priority)
 
 ### Upcoming Features
  * Social login
