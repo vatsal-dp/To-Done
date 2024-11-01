@@ -78,7 +78,7 @@ class Template(models.Model):
     created_on = models.DateTimeField()
     updated_on = models.DateTimeField()
     user_id = models.ForeignKey(User, on_delete=models.CASCADE, null=True, blank=True)
-
+    due_date = models.DateField(default=timezone.now)
     objects = models.Manager()
 
     def __str__(self):
@@ -90,7 +90,7 @@ class TemplateItem(models.Model):
     created_on = models.DateTimeField()
     template = models.ForeignKey(Template, on_delete=models.CASCADE)
     finished_on = models.DateTimeField()
-    due_date = models.DateField()
+    due_date = models.DateField(default=timezone.now)
     tag_color = models.CharField(max_length=10)
     
     objects = models.Manager()
