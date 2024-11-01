@@ -92,7 +92,7 @@ We wanted to work on something that is:
     ```bash
     $ python manage.py runserver 8080
     ```
- * Point your browser at http://127.0.0.1:8080 and explore the app
+ * Point your browser at localhost:8080 and explore the app
 
 ### Documentation
 [See this page](https://chloe-ku.github.io/smart-todo/)
