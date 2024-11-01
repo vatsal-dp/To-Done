@@ -71,7 +71,6 @@ def index(request, list_id=0):
                 if query_list:
                     shared_list.append(query_list)
 
-<<<<<<< HEAD
 
     latest_list_items = ListItem.objects.order_by('-due_date')
     saved_templates = Template.objects.filter(user_id_id=request.user.id).order_by('created_on')
@@ -86,14 +85,6 @@ def index(request, list_id=0):
 
     # change color when is or over due
     cur_date = datetime.datetime.now().replace(tzinfo=pytz.UTC) + datetime.timedelta(minutes=60)
-=======
-    latest_list_items = ListItem.objects.order_by('due_date')
-    saved_templates = Template.objects.filter(user_id_id=request.user.id).order_by('created_on')
-    list_tags = ListTags.objects.filter(user_id=request.user.id).order_by('created_on')
-
-    # change color when is or over due
-    cur_date = datetime.date.today()
->>>>>>> 2d62365fdda854622120e1e2fb4041690091c150
     for list_item in latest_list_items:
         list_item.color = "#FF0000" if cur_date > list_item.due_date else "#000000"
 
@@ -261,15 +252,10 @@ def addNewListItem(request):
         # create a new to-do list object and save it to the database
         try:
             with transaction.atomic():
-<<<<<<< HEAD
                 todo_list_item = ListItem(item_name=item_name, created_on=create_on_time,
                                            finished_on=finished_on_time, due_date=due_date_on_time,
                                              tag_color=tag_color, list_id=list_id, item_text="",
                                                priority = priority, is_done=False)
-=======
-                todo_list_item = ListItem(item_name=item_name, created_on=create_on_time, finished_on=finished_on_time, 
-                                          due_date=due_date, tag_color=tag_color, list_id=list_id, item_text="", is_done=False)
->>>>>>> 2d62365fdda854622120e1e2fb4041690091c150
                 todo_list_item.save()
                 result_item_id = todo_list_item.id
         except IntegrityError:
@@ -312,15 +298,9 @@ def markListItem(request):
                     query_item.calculate_completion_time()
                 query_item.save()
                 # Sending an success response
-<<<<<<< HEAD
                 return JsonResponse({'item_name': query_item.item_name,
                                       'list_name': query_list.title_text,
                                         'item_text': query_item.item_text})
-=======
-                return JsonResponse({'item_name': query_item.item_name, 
-                                     'list_name': query_list.title_text, 
-                                     'item_text': query_item.item_text})
->>>>>>> 2d62365fdda854622120e1e2fb4041690091c150
         except IntegrityError:
             print("query list item" + str(list_item_name) + " failed!")
             JsonResponse({})
@@ -367,15 +347,10 @@ def getListItemByName(request):
                 query_list = List.objects.get(id=list_id)
                 query_item = ListItem.objects.get(list_id=list_id, item_name=list_item_name)
                 # Sending an success response
-<<<<<<< HEAD
                 return JsonResponse({'item_id': query_item.id,
                                       'item_name': query_item.item_name,
                                         'list_name': query_list.title_text,
                                           'item_text': query_item.item_text})
-=======
-                return JsonResponse({'item_id': query_item.id, 'item_name': query_item.item_name,
-                                     'list_name': query_list.title_text, 'item_text': query_item.item_text})
->>>>>>> 2d62365fdda854622120e1e2fb4041690091c150
         except IntegrityError:
             print("query list item" + str(list_item_name) + " failed!")
             JsonResponse({})
@@ -406,15 +381,10 @@ def getListItemById(request):
                 query_item = ListItem.objects.get(id=list_item_id)
                 #print("item_text", query_item.item_text)
                 # Sending an success response
-<<<<<<< HEAD
                 return JsonResponse({'item_id': query_item.id,
                                       'item_name': query_item.item_name,
                                         'list_name': query_list.title_text,
                                           'item_text': query_item.item_text})
-=======
-                return JsonResponse({'item_id': query_item.id, 'item_name': query_item.item_name, 
-                                     'list_name': query_list.title_text, 'item_text': query_item.item_text})
->>>>>>> 2d62365fdda854622120e1e2fb4041690091c150
         except IntegrityError:
             #print("query list item" + str(list_item_name) + " failed!")
             JsonResponse({})
@@ -447,16 +417,11 @@ def createNewTodoList(request):
             with transaction.atomic():
                 user_id = request.user.id
                 # print(user_id)
-<<<<<<< HEAD
                 todo_list = List(user_id_id=user_id,
                                   title_text=list_name,
                                     created_on=create_on_time,
                                       updated_on=create_on_time,
                                         list_tag=tag_name)
-=======
-                todo_list = List(user_id_id=user_id, title_text=list_name, 
-                                 created_on=create_on_time, updated_on=create_on_time, list_tag=tag_name)
->>>>>>> 2d62365fdda854622120e1e2fb4041690091c150
                 if body['create_new_tag']:
                     # print('new tag')
                     new_tag = ListTags(user_id_id=user_id,
@@ -470,11 +435,6 @@ def createNewTodoList(request):
                 # Progress
                 if body['shared_user']:
                     user_list = shared_user.split(' ')
-<<<<<<< HEAD
-
-=======
-      
->>>>>>> 2d62365fdda854622120e1e2fb4041690091c150
 
                     k = len(user_list)-1
                     i = 0
@@ -620,10 +580,7 @@ def register_request(request):
 # Login a user
 def login_request(request):
     if request.method == "POST":
-<<<<<<< HEAD
         """Login a user"""
-=======
->>>>>>> 2d62365fdda854622120e1e2fb4041690091c150
         form = AuthenticationForm(request, data=request.POST)
         if form.is_valid():
             username = form.cleaned_data.get('username')
@@ -676,11 +633,7 @@ def password_reset_request(request):
                         send_email.fail_silently = False
                         send_email.send()
                     except BadHeaderError:
-<<<<<<< HEAD
                         return HttpResponse('Invalid header found')
-=======
-                        return HttpResponse('Invalid header found')               
->>>>>>> 2d62365fdda854622120e1e2fb4041690091c150
                     return redirect("/password_reset/done/")
             else:
                 messages.error(request, "Not an Email from existing users!")
