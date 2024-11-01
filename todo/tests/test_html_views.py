@@ -24,3 +24,17 @@ class HTMLViewsTests(TestCase):
         response = self.client.get(reverse('todo:index'))
         self.assertEqual(response.status_code, 200)
         self.assertContains(response, 'id="theme-toggle"')
+
+    def test_register_page_form_elements(self):
+        response = self.client.get(reverse('todo:register'))
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, '<form', msg_prefix="Form tag is missing on the register page")
+        self.assertContains(response, 'input type="text" name="username"', msg_prefix="Username field is missing")
+        self.assertContains(response, 'input type="password" name="password1"', msg_prefix="Password field 1 is missing")
+        self.assertContains(response, 'input type="password" name="password2"', msg_prefix="Password field 2 is missing")
+
+    def test_index_page_dark_mode_button_text(self):
+        response = self.client.get(reverse('todo:index'))
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, '<button id="theme-toggle"', html=False)
+        self.assertContains(response, '>🌙 Dark Mode</button>', html=False, msg_prefix="Dark Mode button text is incorrect or missing")
