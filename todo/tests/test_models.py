@@ -157,4 +157,8 @@ class TestModels(TestCase):
         templates = Template.objects.filter(user_id=self.user)
         self.assertEqual(templates.count(), 2)
         self.assertIn(template2, templates)
-    
+   
+    def test_create_list(self):
+        list_obj = List.objects.create(title_text="Test List", created_on=timezone.now(), updated_on=timezone.now())
+        self.assertEqual(list_obj.title_text, "Test List")
+
