@@ -138,6 +138,31 @@ We wanted to work on something that is:
     <img src="img/todone-tag-color.gif" width="500" height="250" />
 </p>
 
+#### Notifications
+<p float="middle">
+    <img src="img/notifications.gif" width="500" height="250" />
+</p>
+
+#### Dark Mode
+<p float="middle">
+    <img src="img/dark mode.gif" width="500" height="250" />
+</p>
+
+#### Tasks Sorted By Due Date
+<p float="middle">
+    <img src="img/time.gif" width="500" height="250" />
+</p>
+
+#### On Time Metrics
+<p float="middle">
+    <img src="img/metrics.gif" width="500" height="250" />
+</p>
+
+#### Priority
+<p float="middle">
+    <img src="img/priority.gif" width="500" height="250" />
+</p>
+
 
 ### Want to Contribute?
 
