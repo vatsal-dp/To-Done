@@ -122,7 +122,6 @@ We wanted to work on something that is:
     <img src="img/todone-templates.gif" width="500" height="250" />
 </p>
 
-### New Features
 #### Customizable Grouping Tags
 <p float="middle">
     <img src="img/todone-tag-list.gif" width="500" height="250" />
@@ -138,6 +137,7 @@ We wanted to work on something that is:
     <img src="img/todone-tag-color.gif" width="500" height="250" />
 </p>
 
+### New Features
 #### Notifications
 <p float="middle">
     <img src="img/notifications.gif" width="500" height="250" />
