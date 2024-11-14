@@ -225,46 +225,112 @@ def updateListItem(request, item_id):
         return redirect("/")
     return redirect("index")
 
+# # Add a new to-do list item, called by javascript function
+# @csrf_exempt
+# def addNewListItem(request):
+#     """Add a new to-do list item, called by javascript function"""
+#     if not request.user.is_authenticated:
+#         return redirect("/login")
+#     if request.method == 'POST':
+#         body_unicode = request.body.decode('utf-8')
+#         body = json.loads(body_unicode)
+#         list_id = body['list_id']
+#         item_name = body['list_item_name']
+#         create_on = body['create_on']
+#         eastern = pytz.timezone('US/Eastern')
+#         create_on_time = datetime.datetime.fromtimestamp(create_on).replace(tzinfo=eastern)
+#         finished_on_time = datetime.datetime.fromtimestamp(create_on).replace(tzinfo=eastern)
+#         due_date = body['due_date']
+#         tag_color = body['tag_color']
+#         priority = body.get('priority', 2)
+#         due_date_on_time = datetime.datetime.fromtimestamp(due_date).replace(tzinfo=eastern)
+#         # print(item_name)
+#         # print(create_on)
+#         #print(due_date)
+#         result_item_id = -1
+#         # create a new to-do list object and save it to the database
+#         try:
+#             with transaction.atomic():
+#                 todo_list_item = ListItem(item_name=item_name, created_on=create_on_time,
+#                                            finished_on=finished_on_time, due_date=due_date_on_time,
+#                                              tag_color=tag_color, list_id=list_id, item_text="",
+#                                                priority = priority, is_done=False)
+#                 todo_list_item.save()
+#                 result_item_id = todo_list_item.id
+#         except IntegrityError:
+#             print("unknown error occurs when trying to create and save a new todo list")
+#             return JsonResponse({'item_id': -1})
+#         return JsonResponse({'item_id': result_item_id})  # Sending an success response
+#     else:
+#         return JsonResponse({'item_id': -1})
 
-# Add a new to-do list item, called by javascript function
 @csrf_exempt
 def addNewListItem(request):
     """Add a new to-do list item, called by javascript function"""
     if not request.user.is_authenticated:
         return redirect("/login")
+    
     if request.method == 'POST':
-        body_unicode = request.body.decode('utf-8')
-        body = json.loads(body_unicode)
-        list_id = body['list_id']
-        item_name = body['list_item_name']
-        create_on = body['create_on']
-        eastern = pytz.timezone('US/Eastern')
-        create_on_time = datetime.datetime.fromtimestamp(create_on).replace(tzinfo=eastern)
-        finished_on_time = datetime.datetime.fromtimestamp(create_on).replace(tzinfo=eastern)
-        due_date = body['due_date']
-        tag_color = body['tag_color']
-        priority = body.get('priority', 2)
-        due_date_on_time = datetime.datetime.fromtimestamp(due_date).replace(tzinfo=eastern)
-        # print(item_name)
-        # print(create_on)
-        #print(due_date)
-        result_item_id = -1
-        # create a new to-do list object and save it to the database
         try:
+            # Parse request body
+            body_unicode = request.body.decode('utf-8')
+            body = json.loads(body_unicode)
+            
+            list_id = body['list_id']
+            item_name = body['list_item_name']
+            create_on = body['create_on']
+            due_date = body['due_date']
+            tag_color = body['tag_color']
+            priority = body.get('priority', 2)
+
+            # Convert timestamps to aware datetime objects
+            # Use fromtimestamp with timezone.utc first, then convert to Eastern
+            eastern = pytz.timezone('US/Eastern')
+            
+            create_on_time = (
+                datetime.datetime.fromtimestamp(create_on, tz=pytz.UTC)
+                .astimezone(eastern)
+            )
+            
+            finished_on_time = (
+                datetime.datetime.fromtimestamp(create_on, tz=pytz.UTC)
+                .astimezone(eastern)
+            )
+            
+            due_date_on_time = (
+                datetime.datetime.fromtimestamp(due_date, tz=pytz.UTC)
+                .astimezone(eastern)
+            )
+
+            # Create and save the new todo list item
             with transaction.atomic():
-                todo_list_item = ListItem(item_name=item_name, created_on=create_on_time,
-                                           finished_on=finished_on_time, due_date=due_date_on_time,
-                                             tag_color=tag_color, list_id=list_id, item_text="",
-                                               priority = priority, is_done=False)
+                todo_list_item = ListItem(
+                    item_name=item_name,
+                    created_on=create_on_time,
+                    finished_on=finished_on_time,
+                    due_date=due_date_on_time,
+                    tag_color=tag_color,
+                    list_id=list_id,
+                    item_text="",
+                    priority=priority,
+                    is_done=False
+                )
                 todo_list_item.save()
                 result_item_id = todo_list_item.id
-        except IntegrityError:
-            print("unknown error occurs when trying to create and save a new todo list")
-            return JsonResponse({'item_id': -1})
-        return JsonResponse({'item_id': result_item_id})  # Sending an success response
-    else:
-        return JsonResponse({'item_id': -1})
+                
+            return JsonResponse({'item_id': result_item_id})
 
+        except json.JSONDecodeError:
+            print("Error decoding JSON data")
+            return JsonResponse({'item_id': -1})
+        except IntegrityError:
+            print("Database integrity error when creating new todo list")
+            return JsonResponse({'item_id': -1})
+        except Exception as e:
+            print(f"Unexpected error: {str(e)}")
+            return JsonResponse({'item_id': -1})
+            
+    return JsonResponse({'item_id': -1})
 
 # Mark a to-do list item as done/not done, called by javascript function
 @csrf_exempt
@@ -500,6 +566,69 @@ def send_push(request):
         return JsonResponse(status=200, data={"message": "Web push successful"})
     except TypeError:
         return JsonResponse(status=500, data={"message": "An error occurred"})
+
+# Send a push notification to a user
+# @require_POST
+# @csrf_exempt
+# def checkForNotifications(request):
+#     """Send a push notification to a user"""
+#     try:
+#         body = request.body
+#         data = json.loads(body)
+
+#         if 'timestamp' not in data or 'id' not in data:
+#             return JsonResponse(status=400, data={"message": "Invalid data format"})
+
+#         timestamp = data['timestamp']
+#         user_id = data['id']
+#         user = get_object_or_404(User, pk=user_id)
+
+#         allItems = []
+
+#         # shared_list = SharedList.objects.filter(user=User.objects.get(request.user.id))
+#         eastern = pytz.timezone('US/Eastern')
+#         latest_lists = List.objects.filter(user_id=request.user.id).order_by('-updated_on')
+#         # cur_date = datetime.datetime.now(eastern).replace(tzinfo=pytz.UTC)
+#         cur_date = datetime.datetime.now().replace(tzinfo=pytz.UTC, second=0, microsecond=0) + datetime.timedelta(hours=1)
+
+#         for list in latest_lists:
+#             # print(list)
+#             allItems = ListItem.objects.filter(list=list).order_by('list_id')
+#             for item in allItems:
+#                 # realDueDate = item.due_date
+#                 realDueDate = item.due_date - datetime.timedelta(hours=5)
+#                 # realDueDate_epoch = calendar.timegm(time.strptime(realDueDate, '%Y-%m-%d %H:%M:%S'))
+#                 #(cur_date, " - ", realDueDate, ": ", realDueDate - cur_date, " ?= ", datetime.timedelta(minutes=30))
+#                 if  realDueDate - cur_date == datetime.timedelta(minutes=30):
+#                     message = "{} will be due in 30 minutes".format(item.item_name)
+#                     payload = {'head': item.item_name, 'body': message}
+#                     send_user_notification(user=user, payload=payload, ttl=1000)
+#                     #print("TRUE")
+
+#         # for list_item in latest_list_items:
+#         #     print(list_item.due_date)
+
+#         # print (latest_list_items)
+#         # print(shared_list)
+#         # shared_list = SharedList(user=User.objects.get(request.user), shared_list_id="")
+#         # print(shared_list)
+
+#         # user = get_object_or_404(User, pk=user_id)
+#         # payload = {'head': data['head'], 'body': data['body']}
+#         # send_user_notification(user=user, payload=payload, ttl=1000)
+
+#         return JsonResponse(status=200, data={"message": "Web push successful"})
+#     except TypeError:
+#         return JsonResponse(status=500, data={"message": "An error occurred"})
+
+from django.http import JsonResponse
+from django.views.decorators.csrf import csrf_exempt
+from django.views.decorators.http import require_POST
+from django.shortcuts import get_object_or_404
+from django.utils import timezone
+import json
+import pytz
+import datetime
 
 # Send a push notification to a user
 @require_POST

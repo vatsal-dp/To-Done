@@ -1027,9 +1027,9 @@ function newElement(list_id, saved_to_database = true) {
     if(saved_to_database && inputValue !== '') {
         var httpRequest = new XMLHttpRequest()
         var today = new Date()
-        var create_on_timestamp = (today.getTime() / 1000) + 3840
+        var create_on_timestamp = (today.getTime() / 1000)
         var due_date_epoch = new Date(inputDue)
-        due_date_epoch = (due_date_epoch.getTime() / 1000) + 3840
+        due_date_epoch = (due_date_epoch.getTime() / 1000)
         httpRequest.onreadystatechange = function() {
             if (this.readyState === 4 && this.status === 200) {
                 // get the newly created item's id and set it as the id of the html tag
