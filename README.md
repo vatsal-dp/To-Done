@@ -193,14 +193,17 @@ Distributed under the MIT License. See [LICENSE](LICENSE) for more information.
 
 <table>
   <tr>
-    <td align="center"><a href="https://github.com/Charlie-Eastin"><img src="https://avatars.githubusercontent.com/u/176774701?s=400?v=4" width="100px;" alt=""/><br /><sub><b>Charlie Eastin</b></sub></a></td>
-    <td align="center"><a href="https://github.com/SpencerKersey"><img src="https://avatars.githubusercontent.com/u/77792710?v=4" width="100px;" alt=""/><br /><sub><b>Spencer Kerseyb></sub></a><br /></td>
-    <td align="center"><a href="https://github.com/Shawty2084"><img src="https://avatars.githubusercontent.com/u/89483146?v=4" width="100px;" alt=""/><br /><sub><b>Aastha Gaudani</b></sub></a><br /></td>
+    <td align="center"><a href="https://github.com/vatsal-dp"><img src="https://avatars.githubusercontent.com/u/75309827?v=4" width="100px;" alt=""/><br /><sub><b>Vatsal Patel</b></sub></a></td>
+    <td align="center"><a href="https://github.com/smitraval24"><img src="https://avatars.githubusercontent.com/u/121729070?v=4" width="100px;" alt=""/><br /><sub><b>Smit Raval</b></sub></a><br /></td>
+    <td align="center"><a href="https://github.com/devyash2930"><img src="https://avatars.githubusercontent.com/u/74496621?v=4" width="100px;" alt=""/><br /><sub><b>Devyash Shah</b></sub></a><br /></td>
   </tr>
 </table>
 
 ### Developers (Last Version)
 
+- Aastha Gaudani
+- Spencer Kerseyb
+- Charlie Eastin
 - Shahnewaz Leon (sleon3@ncsu.edu)
 - Dong Li (dli35@ncsu.edu)
 - Cheng-Yun Kuo (ckuo3@ncsu.edu)
