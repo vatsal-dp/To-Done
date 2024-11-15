@@ -9,6 +9,8 @@ from django.views.decorators.http import require_POST
 from django.db import transaction, IntegrityError
 from django.utils import timezone
 
+from django.core.mail import send_mail
+
 from todo.models import List, ListItem, Template, TemplateItem, ListTags, SharedUsers, SharedList
 
 from todo.forms import NewUserForm
@@ -635,6 +637,7 @@ import datetime
 @csrf_exempt
 def checkForNotifications(request):
     """Send a push notification to a user"""
+    
     try:
         body = request.body
         data = json.loads(body)
@@ -645,28 +648,42 @@ def checkForNotifications(request):
         timestamp = data['timestamp']
         user_id = data['id']
         user = get_object_or_404(User, pk=user_id)
-
+        # print("user email id: ",user.email)
         allItems = []
 
         # shared_list = SharedList.objects.filter(user=User.objects.get(request.user.id))
         eastern = pytz.timezone('US/Eastern')
         latest_lists = List.objects.filter(user_id=request.user.id).order_by('-updated_on')
         # cur_date = datetime.datetime.now(eastern).replace(tzinfo=pytz.UTC)
-        cur_date = datetime.datetime.now().replace(tzinfo=pytz.UTC, second=0, microsecond=0) + datetime.timedelta(hours=1)
-
+        cur_date = datetime.datetime.now().replace(tzinfo=pytz.UTC, second=0, microsecond=0)
+        print("current date variable = ",cur_date)
         for list in latest_lists:
             # print(list)
             allItems = ListItem.objects.filter(list=list).order_by('list_id')
             for item in allItems:
                 # realDueDate = item.due_date
                 realDueDate = item.due_date - datetime.timedelta(hours=5)
+                print("real due date var = ",realDueDate)
                 # realDueDate_epoch = calendar.timegm(time.strptime(realDueDate, '%Y-%m-%d %H:%M:%S'))
                 #(cur_date, " - ", realDueDate, ": ", realDueDate - cur_date, " ?= ", datetime.timedelta(minutes=30))
+                print("difference = ",realDueDate-cur_date)
+                print("delta = ",datetime.timedelta(minutes=30))
                 if  realDueDate - cur_date == datetime.timedelta(minutes=30):
+                    print("inside if condition!")
                     message = "{} will be due in 30 minutes".format(item.item_name)
                     payload = {'head': item.item_name, 'body': message}
                     send_user_notification(user=user, payload=payload, ttl=1000)
                     #print("TRUE")
+                    send_mail(
+                        subject="Reminder: {} due in 30 minutes".format(item.item_name),
+                        message=message,
+                        # from_email=settings.DEFAULT_FROM_EMAIL,
+                        # recipient_list=[user.email],
+                        from_email="clemsonbetter@gmail.com",
+                        recipient_list=[user.email],
+                        fail_silently=False,
+                    )
+                    print("mail sent!")
 
         # for list_item in latest_list_items:
         #     print(list_item.due_date)
