@@ -9,6 +9,12 @@ media
 # Backup files #
 *.bak
 
+/home/devyash/Downloads/NCSU/SE/last project/To-Done/todo/cred.json
+/home/devyash/Downloads/NCSU/SE/last project/To-Done/token.json
+
+cred.json
+token.json
+
 # If you are using PyCharm #
 .idea
 # User-specific stuff

@@ -26,9 +26,57 @@ from django.utils.http import urlsafe_base64_encode
 from django.contrib.auth.tokens import default_token_generator
 from django.utils.encoding import force_bytes
 from django.core.mail import EmailMessage
-
 # Import for notifications
 from webpush import send_user_notification
+# our 
+# import google_calendar
+
+# from google_calendar import cal_service
+
+
+import datetime
+import os.path
+
+from google.auth.transport.requests import Request
+from google.oauth2.credentials import Credentials
+from google_auth_oauthlib.flow import InstalledAppFlow
+from googleapiclient.discovery import build
+from googleapiclient.errors import HttpError
+from http.server import HTTPServer, BaseHTTPRequestHandler
+
+
+# If modifying these scopes, delete the file token.json.
+SCOPES = ["https://www.googleapis.com/auth/calendar"]
+
+
+def cal_service():
+  """Shows basic usage of the Google Calendar API.
+  Prints the start and name of the next 10 events on the user's calendar.
+  """
+  creds = None
+  # The file token.json stores the user's access and refresh tokens, and is
+  # created automatically when the authorization flow completes for the first
+  # time.
+  if os.path.exists("token.json"):
+    creds = Credentials.from_authorized_user_file("token.json", SCOPES)
+  # If there are no (valid) credentials available, let the user log in.
+  if not creds or not creds.valid:
+    if creds and creds.expired and creds.refresh_token:
+      creds.refresh(Request())
+    else:
+      flow = InstalledAppFlow.from_client_secrets_file(
+          "/home/devyash/Downloads/NCSU/SE/last project/To-Done/todo/cred.json", SCOPES
+      )
+      creds = flow.run_local_server(port=8002)
+    # Save the credentials for the next run
+    with open("token.json", "w") as token:
+      token.write(creds.to_json())
+
+  try:
+    return build("calendar", "v3", credentials=creds)
+
+  except HttpError as error:
+    print(f"An error occurred: {error}")
 
 
 # Render the home page with users' to-do lists
@@ -245,6 +293,36 @@ def addNewListItem(request):
         tag_color = body['tag_color']
         priority = body.get('priority', 2)
         due_date_on_time = datetime.datetime.fromtimestamp(due_date).replace(tzinfo=eastern)
+        event = {
+          'summary': 'Google I/O 2015',
+          'location': '800 Howard St., San Francisco, CA 94103',
+          'description': 'A chance to hear more about Google\'s developer products.',
+          'start': {
+            'dateTime': '2024-11-25T09:00:00-07:00',
+            'timeZone': 'America/Los_Angeles',
+          },
+          'end': {
+            'dateTime': '2024-11-25T17:03:00-07:00',
+            'timeZone': 'America/Los_Angeles',
+          },
+          'recurrence': [
+            'RRULE:FREQ=DAILY;COUNT=2'
+          ],
+          'attendees': [
+            {'email': 'lpage@example.com'},
+            {'email': 'sbrin@example.com'},
+          ],
+          'reminders': {
+            'useDefault': False,
+            'overrides': [
+              {'method': 'email', 'minutes': 24 * 60},
+              {'method': 'popup', 'minutes': 10},
+            ],
+          },
+        }
+        service = cal_service()
+        event = service.events().insert(calendarId='primary', body=event).execute()
+        print('Event created: %s' % (event.get('htmlLink')))
         # print(item_name)
         # print(create_on)
         #print(due_date)
@@ -642,3 +720,44 @@ def password_reset_request(request):
 
     password_reset_form = PasswordResetForm()
     return render(request=request, template_name="todo/password/password_reset.html", context={"password_reset_form":password_reset_form})
+
+
+
+
+
+# if __name__ == "__main__":
+#   service = main()
+# Refer to the Python quickstart on how to setup the environment:
+# https://developers.google.com/calendar/quickstart/python
+# Change the scope to 'https://www.googleapis.com/auth/calendar' and delete any
+# stored credentials.
+
+# event = {
+#   'summary': 'Google I/O 2015',
+#   'location': '800 Howard St., San Francisco, CA 94103',
+#   'description': 'A chance to hear more about Google\'s developer products.',
+#   'start': {
+#     'dateTime': '2015-05-28T09:00:00-07:00',
+#     'timeZone': 'America/Los_Angeles',
+#   },
+#   'end': {
+#     'dateTime': '2015-05-28T17:00:00-07:00',
+#     'timeZone': 'America/Los_Angeles',
+#   },
+#   'recurrence': [
+#     'RRULE:FREQ=DAILY;COUNT=2'
+#   ],
+#   'attendees': [
+#     {'email': 'lpage@example.com'},
+#     {'email': 'sbrin@example.com'},
+#   ],
+#   'reminders': {
+#     'useDefault': False,
+#     'overrides': [
+#       {'method': 'email', 'minutes': 24 * 60},
+#       {'method': 'popup', 'minutes': 10},
+#     ],
+#   },
+# # }
+# event = service.events().insert(calendarId='primary', body=event).execute()
+# print('Event created: %s' % (event.get('htmlLink')))
