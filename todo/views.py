@@ -83,7 +83,7 @@ def index(request, list_id=0):
     if not request.user.is_authenticated:
         return redirect("/login")
 
-
+    shared_list = []
 
     webpush_settings = getattr(settings, 'WEBPUSH_SETTINGS', {})
     vapid_key = webpush_settings.get('VAPID_PUBLIC_KEY')
@@ -96,7 +96,26 @@ def index(request, list_id=0):
     else:
         latest_lists = List.objects.filter(user_id_id=request.user.id).order_by('-updated_on')
 
-        
+        try:
+            query_list_str = SharedList.objects.get(user_id=request.user.id).shared_list_id
+        except SharedList.DoesNotExist:
+            query_list_str = None
+
+        if query_list_str is not None:
+            shared_list_id = query_list_str.split(" ")
+            shared_list_id.remove("")
+
+            latest_lists = list(latest_lists)
+
+            for list_id in shared_list_id:
+
+                try:
+                    query_list = List.objects.get(id=int(list_id))
+                except List.DoesNotExist:
+                    query_list = None
+
+                if query_list:
+                    shared_list.append(query_list)
 
 
     latest_list_items = ListItem.objects.order_by('-due_date')
@@ -120,7 +139,7 @@ def index(request, list_id=0):
         'latest_list_items': latest_list_items,
         'templates': saved_templates,
         'list_tags': list_tags,
-        
+        'shared_list': shared_list,
         'user': user,
         'vapid_key': vapid_key,
         'on_time_rate': (on_time_tasks / total_completed_tasks * 100) if total_completed_tasks > 0 else 0,
@@ -536,6 +555,7 @@ def createNewTodoList(request):
         list_name = body['list_name']
         create_on = body['create_on']
         tag_name = body['list_tag']
+        shared_user = body['shared_user']
         user_not_found = []
         #print(shared_user)
         create_on_time = timezone.make_aware(datetime.datetime.fromtimestamp(create_on))
@@ -562,7 +582,39 @@ def createNewTodoList(request):
                 #print(todo_list.id)
 
                 # Progress
-                
+                if body['shared_user']:
+                    user_list = shared_user.split(' ')
+
+                    k = len(user_list)-1
+                    i = 0
+                    while i <= k:
+
+                        try:
+                            query_user = User.objects.get(username=user_list[i])
+                        except User.DoesNotExist:
+                            query_user = None
+
+                        if query_user:
+
+                            shared_list_id = SharedList.objects.get(user=query_user).shared_list_id
+                            shared_list_id = shared_list_id + str(todo_list.id) + " "
+                            SharedList.objects.filter(user=query_user).update(shared_list_id=shared_list_id)
+                            i += 1
+
+                        else:
+                            #print("No user named " + user_list[i] + " found!")
+                            user_not_found.append(user_list[i])
+                            user_list.remove(user_list[i])
+                            k -= 1
+
+                    shared_user = ' '.join(user_list)
+                    new_shared_user = SharedUsers(list_id=todo_list, shared_user=shared_user)
+                    new_shared_user.save()
+
+                    #print(user_not_found)
+
+                    if user_list:
+                        List.objects.filter(id=todo_list.id).update(is_shared=True)
 
         except IntegrityError as e:
             print(str(e))
@@ -740,7 +792,8 @@ def register_request(request):
             #print(user)
 
             # Add a empty list to SharedList table
-           
+            shared_list = SharedList(user=User.objects.get(username=user), shared_list_id="")
+            shared_list.save()
 
             login(request, user)
             messages.success(request, "Registration successful." )
