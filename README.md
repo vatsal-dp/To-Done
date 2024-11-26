@@ -3,7 +3,7 @@ x<p align="center">
 </p>
 <h2 align="center">The Only Todo List You Need</h2>
 
-[![Coverage Status](https://coveralls.io/repos/github/CSC510-Team-57/To-Done/badge.svg?branch=main)](https://coveralls.io/github/CSC510-Team-57/To-Done?branch=main)
+[![Coverage Status](https://coveralls.io/repos/github/vatsal-dp/To-Done/badge.svg?branch=main)](https://coveralls.io/github/vatsal-dp/To-Done?branch=main)
 [![Pylint Score](https://byob.yarr.is/CSC510-Team-57/To-Done/pylint_score)]([https://github.com/vatsal-dp/To-Done/actions/workflows/pylint.yml])
 [![license badge](https://img.shields.io/badge/License-MIT-green.svg)](https://github.com/CSC510-Team-57/To-Done/blob/main/LICENSE)
 [![Python 3.8](https://img.shields.io/badge/python-3.8-blue.svg)](https://www.python.org/downloads/release/python-380/)
