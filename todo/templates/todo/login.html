@@ -1,131 +1,123 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>To-Done</title>
-<style>
-	body {
-        font-family: Calibri, Helvetica, sans-serif;
-        margin: 0;
-    }
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            background-color: #f8f9fa;
+            margin: 0;
+        }
+        .navbar {
+            background-color: #007bff;
+        }
+        .navbar-brand {
+            color: #ffffff !important;
+            font-weight: bold;
+        }
+        .login-container {
+            background-color: #ffffff;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            padding: 30px;
+            max-width: 400px;
+            width: 100%;
+            margin: 50px auto;
+        }
+        .form-title {
+            text-align: center;
+            margin-bottom: 20px;
+            font-size: 1.5rem;
+            color: #343a40;
+        }
+        .btn-custom {
+            width: 100%;
+            margin-top: 0;  /* Reset margin-top to 0 to place the button back to its original position */
+        }
 
-    ul {
-        list-style: none;
-        padding-left: 0;
-    }
+        .alert {
+            margin-top: 10px;
+        }
+        .alert-success {
+            background-color: #28a745; /* Green */
+            color: white;
+        }
+        .alert-danger {
+            background-color: #dc3545; /* Red */
+            color: white;
+        }
+        .text-center a {
+            color: #007bff;
+            text-decoration: none;
+        }
+        .text-center a:hover {
+            text-decoration: underline;
+        }
 
-    .topbar {
-        overflow: hidden;
-        background-color: #0fa662;
-        position: fixed;
-        width: 100%;
-        top: 0;
-        z-index: 1;
-    }
+        .password-container {
+            position: relative;
+            margin-bottom: 20px; /* Added margin-bottom to space out from the login button */
+        }
 
-    .topbar a {
-        float: left;
-        color: white;
-        text-align: center;
-        padding-left: 15px;
-        text-decoration: none;
-        font-size: 25px;
-        padding: 10px;
-    }
+        .eye-icon {
+            position: absolute;
+            right: 10px;
+            top: 70%;  /* Adjusted to move the eye a little down */
+            transform: translateY(-50%);
+            cursor: pointer;
+        }
 
-    .topbar ul {
-        margin: 0;
-        padding: 0;
-        overflow: hidden;
-        display: inline-block;
-    }
 
-    .topbar ul li {
-        display: inline-block;
-        color: #f2f2f2;
-        text-align: center;
-    }
+        .form-footer {
+            text-align: center;
+            margin-top: 15px;
+        }
 
-    h1 {
-        color: #0fa662;
-        text-align: center;
-    }
-
-    .main button {
-        display: inline-block;
-        cursor: pointer;
-        border-radius: 10px;
-        background: #0fa662;
-        border: 0;
-        font-size: 16px;
-        height: 37px;
-        padding: 0 11px;
-        margin-top: 5px;
-        text-align: center;
-        width: 100%;
-        min-width: 200px;
-        font-weight: 500;
-        color: #f9f9f9;
-    }
-
-    .main button:hover {
-        background: #0b8f54;
-    }
-
-    input[type=text], input[type=password], input[type=email] {
-        width: 100%;
-        margin: 8px 0;
-        padding: 12px 20px;
-        display: inline-block;
-        border: 0px;
-        border-radius: 10px;
-        box-sizing: border-box;
-        box-shadow: 1px 1px 5px #555 inset;
-    }
-
-    .container {
-        margin: auto;
-        width: 400px;
-    }
-
-    .right {
-        float: right;
-    }
-
-    .main {
-            font-size: 20px;
-            padding: 0px 20px;
-            margin-top: 70px;
-    }
-</style>
+    </style>
 </head>
 <body>
-    <div class="topbar">
-        <ul><li><a href="/">To-Done</a></li></ul>
+    <!-- Header -->
+    <nav class="navbar navbar-expand-lg navbar-dark">
+        <a class="navbar-brand" href="#">To-Done</a>
+    </nav>
+
+    <!-- Login Container -->
+    <div class="login-container">
+        <h1 class="form-title">Login</h1>
+
+        <form method="POST" novalidate onsubmit="return validateForm()">
+            {% csrf_token %}
+            
+            <div class="form-group">
+                <label for="id_username">Username</label>
+                <input type="text" name="username" id="id_username" placeholder="Username" class="form-control" required>
+            </div>
+
+            <div class="form-group password-container">
+                <label for="id_password">Password</label>
+                <input type="password" name="password" id="id_password" placeholder="Password" class="form-control" required>
+                <span class="eye-icon" onclick="togglePasswordVisibility('id_password')">👁️</span>
+            </div>
+
+            <button type="submit" class="btn btn-primary btn-custom">Login</button>
+
+            <!-- Footer Links -->
+            <div class="form-footer">
+                <p><a href="/register">Create an account</a></p>
+                <p><a href="/forgot-password">Forgot your password?</a></p>
+            </div>
+        </form>
     </div>
-	<div class="main">
-		<h1>Login</h1>
 
-	    	{% for message in messages %}
-			<div style="text-align: center;" class='alert alert-{{message.tags}}'>{{ message }}</div>
-	    	{% endfor %}
-		
-		{% block content %}
-
-		{% load crispy_forms_tags %}
-
-		<!--Login-->
-		<div class="container py-5">
-		  <form method="POST">
-			{% csrf_token %}
-			{{ login_form|crispy }}
-			<button class="btn btn-primary" type="submit">Login</button>
-		  </form>
-		  <p class="text-center"><a href="/register">Create an account</a>.</p>
-		  <p class="text-center"><a href="/password_reset">Forget password</a>.</p>
-		</div>
-
-		{% endblock %}
-	</div>
+    <script>
+        function togglePasswordVisibility(fieldId) {
+            const passwordField = document.getElementById(fieldId);
+            const type = passwordField.type === "password" ? "text" : "password";
+            passwordField.type = type;
+        }
+    </script>
 </body>
 </html>

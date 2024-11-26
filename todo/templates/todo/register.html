@@ -1,145 +1,340 @@
 <!DOCTYPE html>
-<html lang=”en”>
+<html lang="en">
 <head>
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>To-Done</title>
-<style>
-    body {
-        font-family: Calibri, Helvetica, sans-serif;
-        margin: 0;
-    }
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>To-Done - Register</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f5f5f5;
+            color: #333;
+        }
 
-    ul {
-        list-style: none;
-        padding-left: 0;
-    }
+        .navbar {
+            background-color: #0d6efd;
+            color: #fff;
+            padding: 15px 20px;
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
 
-    .topbar {
-        overflow: hidden;
-        background-color: #0fa662;
-        position: fixed;
-        width: 100%;
-        top: 0;
-        z-index: 1;
-    }
+        .navbar a {
+            color: #fff;
+            text-decoration: none;
+            font-size: 1.5rem;
+        }
 
-    .topbar a {
-        float: left;
-        color: white;
-        text-align: center;
-        padding-left: 15px;
-        text-decoration: none;
-        font-size: 25px;
-        padding: 10px;
-    }
+        .container {
+            max-width: 400px;
+            margin: 100px auto;
+            background-color: #fff;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            padding: 20px 30px;
+        }
 
-    .topbar ul {
-        margin: 0;
-        padding: 0;
-        overflow: hidden;
-        display: inline-block;
-    }
+        h1 {
+            font-size: 2rem;
+            margin-bottom: 20px;
+            color: #0d6efd;
+            text-align: center;
+        }
 
-    .topbar ul li {
-        display: inline-block;
-        color: #f2f2f2;
-        text-align: center;
-    }
+        input[type=text],
+        input[type=password],
+        input[type=email] {
+            width: 100%;
+            padding: 12px;
+            margin: 10px 0;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            font-size: 1rem;
+            box-sizing: border-box;
+        }
 
-    h1 {
-        color: #0fa662;
-        text-align: center;
-    }
+        .password-container {
+            position: relative;
+        }
 
-    button {
-        background-color: #0fa662;
-        width: 100%;
-        color: white;
-        padding: 15px;
-        margin: 10px 0px;
-        border: none;
-        cursor: pointer;
-        border-radius: 10px;
-    }
+        .eye-icon {
+            position: absolute;
+            right: 10px;
+            top: 60%;
+            transform: translateY(-50%);
+            cursor: pointer;
+        }
 
-    input[type=text], input[type=password], input[type=email] {
-        width: 100%;
-        margin: 8px 0;
-        padding: 12px 20px;
-        display: inline-block;
-        border: 0px;
-        border-radius: 10px;
-        box-sizing: border-box;
-        box-shadow: 1px 1px 5px #555 inset;
-    }
+        input.error {
+            border-color: #dc3545;
+        }
 
-    button:hover {
-        opacity: 0.7;
-    }
+        .error-message {
+            color: #dc3545;
+            font-size: 0.9rem;
+            margin: 5px 0;
+            display: none;
+        }
 
-    .container {
-        margin: auto;
-        width: 400px;
-    }
+        .valid-message {
+            color: #28a745;
+            font-size: 0.9rem;
+            margin: 5px 0;
+            display: none;
+        }
 
-    .right {
-        float: right;
-    }
+        ul.password-checklist {
+            list-style-type: none;
+            padding: 0;
+            margin: 10px 0;
+            font-size: 0.9rem;
+        }
 
-    .main {
-            font-size: 20px;
-            padding: 0px 20px;
-            margin-top: 70px;
-    }
+        .success-message {
+            color: #28a745;
+            background-color: #d4edda;
+            padding: 15px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+            text-align: center;
+            border: 1px solid #28a745;
+        }
 
-    .main button {
-        display: inline-block;
-        cursor: pointer;
-        border-radius: 10px;
-        background: #0fa662;
-        border: 0;
-        font-size: 16px;
-        height: 37px;
-        padding: 0 11px;
-        margin-top: 5px;
-        text-align: center;
-        width: 100%;
-        min-width: 200px;
-        font-weight: 500;
-        color: #f9f9f9;
-    }
+        ul.password-checklist li {
+            margin: 5px 0;
+            color: #dc3545;
+        }
 
-    .main button:hover {
-        background: #0b8f54;
-    }
-</style>
+        ul.password-checklist li.valid {
+            color: #28a745;
+        }
+
+        ul.password-checklist li::before {
+            content: '❌';
+            margin-right: 5px;
+        }
+
+        ul.password-checklist li.valid::before {
+            content: '✔️';
+        }
+
+        ul.password-checklist li span {
+            margin-left: 5px;
+        }
+
+        #validPasswordMessage {
+            color: #28a745;
+            font-size: 1rem;
+            font-weight: normal;
+            display: none;
+            margin-top: 10px;
+        }
+
+        #confirmPasswordValid {
+            color: #28a745;
+            font-size: 1rem;
+            font-weight: normal;
+            display: none;
+            margin-top: 5px;
+        }
+
+        #confirmPasswordError {
+            color: #dc3545;
+            font-size: 1rem;
+            font-weight: normal;
+            display: none;
+            margin-top: 5px;
+        }
+
+        .registration-failed {
+            color: #dc3545;
+            font-size: 1rem;
+            font-weight: normal;
+            margin-top: 10px;
+            text-align: center;
+        }
+
+        button {
+            background-color: #0d6efd;
+            color: #fff;
+            padding: 12px;
+            border: none;
+            border-radius: 5px;
+            font-size: 1rem;
+            cursor: pointer;
+            width: 100%;
+        }
+
+        button:hover {
+            background-color: #084dbb;
+        }
+
+        p {
+            text-align: center;
+            margin-top: 20px;
+            font-size: 0.9rem;
+        }
+
+        p a {
+            color: #0d6efd;
+            text-decoration: none;
+        }
+
+        p a:hover {
+            text-decoration: underline;
+        }
+    </style>
 </head>
 <body>
-	<div class="topbar">
-        <ul><li><a href="/">To-Done</a></li></ul>
+    <div class="navbar">
+        <a href="/">To-Done</a>
     </div>
+    <div class="container">
+        <h1>Register</h1>
 
-	<div class="main">
+        <!-- Success Message Box (added) -->
+        {% if success_message %}
+        <div class="success-message">
+            {{ success_message }}
+        </div>
+        {% endif %}
 
-		{% for message in messages %}
-        		<div style="text-align: center;" class='alert alert-{{message.tags}}'>{{ message }}</div>
-    		{% endfor %}
-		{% block content %}
+        {% if messages %}
+            <ul>
+                {% for message in messages %}
+                    <li>{{ message }}</li>
+                {% endfor %}
+            </ul>
+        {% endif %}
 
-		{% load crispy_forms_tags %}
+        <form method="POST" novalidate onsubmit="return validateForm()">
+            {% csrf_token %}
 
-		<!--Register-->
-		<div class="container py-5">
-			<h1>Register</h1>
-			<form method="POST">
-				{% csrf_token %}
-				{{ register_form|crispy }}
-				<button class="btn btn-primary" type="submit">Register</button>
-			</form>
-			<p class="text-center">If you already have an account, <a href="/login">login</a> instead.</p>
-		</div>
+            <!-- Registration Failed Message -->
+            <div id="registrationFailed" class="registration-failed" style="display: {% if errors.password_mismatch %}block{% else %}none{% endif %};">
+                {{ errors.password_mismatch }}
+            </div>
 
-		{% endblock %}
-	</div>
+            <div class="form-group">
+                <label for="id_username">Username</label>
+                <input type="text" name="username" id="id_username" placeholder="Username" class="form-control {% if errors.username_exists %}error{% endif %}" value="{{ request.POST.username }}" required oninput="clearErrorMessage('username')">
+                <span class="error-message" id="username-error" style="display: {% if errors.username_exists %}block{% else %}none{% endif %}">{{ errors.username_exists }}</span>
+            </div>
+
+            <div class="form-group">
+                <label for="id_email">Email</label>
+                <input type="email" name="email" id="id_email" placeholder="Email" class="form-control {% if errors.email_exists %}error{% endif %}" value="{{ request.POST.email }}" required oninput="clearErrorMessage('email')">
+                <span class="error-message" id="email-error" style="display: {% if errors.email_exists %}block{% else %}none{% endif %}">{{ errors.email_exists }}</span>
+            </div>
+
+            <div class="form-group password-container">
+                <label for="id_password1">Password</label>
+                <input type="password" name="password1" id="id_password1" placeholder="Password" class="form-control" oninput="validatePassword()" required>
+                <span class="eye-icon" onclick="togglePasswordVisibility('id_password1')">👁️</span>
+                <ul class="password-checklist" id="passwordChecklist" style="display: none;">
+                    <li id="length">At least 8 characters</li>
+                    <li id="uppercase">At least one uppercase letter</li>
+                    <li id="lowercase">At least one lowercase letter</li>
+                    <li id="number">At least one number</li>
+                    <li id="special">At least one special character</li>
+                </ul>
+                <div id="validPasswordMessage" style="display: none;">✔️ Valid password format</div>
+            </div>
+
+            <div class="form-group password-container">
+                <label for="id_password2">Confirm Password</label>
+                <input type="password" name="password2" id="id_password2" placeholder="Confirm Password" class="form-control" required oninput="validateConfirmPassword()">
+                <span class="eye-icon" onclick="togglePasswordVisibility('id_password2')">👁️</span>
+                <span id="confirmPasswordError" class="error-message">Passwords do not match.</span>
+                <span id="confirmPasswordValid" class="valid-message">✔️ Password matches.</span>
+            </div>
+
+            <button type="submit" class="btn btn-primary">Register</button>
+        </form>
+
+        <p>
+            Already have an account? 
+            <a href="/login" onclick="redirectToLogin(event)">Login here</a>.
+        </p>
+    </div>
+    
+    <script>
+        function togglePasswordVisibility(fieldId) {
+            const passwordField = document.getElementById(fieldId);
+            const type = passwordField.type === "password" ? "text" : "password";
+            passwordField.type = type;
+        }
+
+        function validatePassword() {
+            const password = document.getElementById("id_password1").value;
+            const checklist = {
+                length: password.length >= 8,
+                uppercase: /[A-Z]/.test(password),
+                lowercase: /[a-z]/.test(password),
+                number: /\d/.test(password),
+                special: /[!@#$%^&*(),.?":{}|<>]/.test(password)
+            };
+
+            for (const [id, isValid] of Object.entries(checklist)) {
+                const element = document.getElementById(id);
+                if (isValid) {
+                    element.classList.add("valid");
+                    element.classList.remove("invalid");
+                } else {
+                    element.classList.remove("valid");
+                    element.classList.add("invalid");
+                }
+            }
+
+            const valid = Object.values(checklist).every((item) => item);
+            document.getElementById("validPasswordMessage").style.display = valid ? "block" : "none";
+
+            if (valid) {
+                document.getElementById("passwordChecklist").style.display = "none";
+            } else {
+                document.getElementById("passwordChecklist").style.display = "block";
+            }
+        }
+
+        function validateConfirmPassword() {
+            const password = document.getElementById("id_password1").value;
+            const confirmPassword = document.getElementById("id_password2").value;
+
+            if (password === confirmPassword) {
+                document.getElementById("confirmPasswordError").style.display = "none";
+                document.getElementById("confirmPasswordValid").style.display = "block";
+            } else {
+                document.getElementById("confirmPasswordError").style.display = "block";
+                document.getElementById("confirmPasswordValid").style.display = "none";
+            }
+        }
+
+        function clearErrorMessage(field) {
+            document.getElementById(`${field}-error`).style.display = "none";
+        }
+
+        function redirectToLogin(event) {
+            event.preventDefault();
+            window.location.href = "/login";
+        }
+
+        function validateForm() {
+            const password1 = document.getElementById("id_password1").value;
+            const password2 = document.getElementById("id_password2").value;
+            if (password1 !== password2) {
+                document.getElementById("registrationFailed").style.display = "block";
+                return false;
+            }
+            return true;
+        }
+    </script>
 </body>
 </html>
