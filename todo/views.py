@@ -602,46 +602,46 @@ def login_request(request):
         else:
             # If the form is invalid (e.g., empty fields), show custom error message
             messages.error(request, "Invalid username or password.")
+    
     else:
         form = AuthenticationForm()
 
     return render(request, "todo/login.html", {"login_form": form})
 
+# class NewUserForm(forms.ModelForm):
+#     """Form for user registration with custom validation."""
+#     password = forms.CharField(widget=forms.PasswordInput, label="Password")
+#     confirm_password = forms.CharField(widget=forms.PasswordInput, label="Confirm Password")
 
-class NewUserForm(forms.ModelForm):
-    """Form for user registration with custom validation."""
-    password = forms.CharField(widget=forms.PasswordInput, label="Password")
-    confirm_password = forms.CharField(widget=forms.PasswordInput, label="Confirm Password")
+#     class Meta:
+#         model = User
+#         fields = ["username", "email", "password"]
 
-    class Meta:
-        model = User
-        fields = ["username", "email", "password"]
+#     def clean_email(self):
+#         email = self.cleaned_data.get("email")
+#         try:
+#             validate_email(email)
+#         except ValidationError:
+#             raise ValidationError("Invalid email format.")
+#         return email
 
-    def clean_email(self):
-        email = self.cleaned_data.get("email")
-        try:
-            validate_email(email)
-        except ValidationError:
-            raise ValidationError("Invalid email format.")
-        return email
+#     def clean_password(self):
+#         password = self.cleaned_data.get("password")
+#         validate_password(password)  # Use Django's built-in validators
+#         return password
 
-    def clean_password(self):
-        password = self.cleaned_data.get("password")
-        validate_password(password)  # Use Django's built-in validators
-        return password
+#     def clean(self):
+#         cleaned_data = super().clean()
+#         password = cleaned_data.get("password")
+#         confirm_password = cleaned_data.get("confirm_password")
 
-    def clean(self):
-        cleaned_data = super().clean()
-        password = cleaned_data.get("password")
-        confirm_password = cleaned_data.get("confirm_password")
+#         if password and confirm_password and password != confirm_password:
+#             self.add_error("confirm_password", "Passwords do not match.")
+#         return cleaned_data
 
-        if password and confirm_password and password != confirm_password:
-            self.add_error("confirm_password", "Passwords do not match.")
-        return cleaned_data
-
-from django.shortcuts import render, redirect
-from django.contrib.auth.models import User
-from django.contrib import messages
+# from django.shortcuts import render, redirect
+# from django.contrib.auth.models import User
+# from django.contrib import messages
 
 def register_request(request):
     if request.method == 'POST':
