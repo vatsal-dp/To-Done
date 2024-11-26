@@ -204,9 +204,6 @@ Distributed under the MIT License. See [LICENSE](LICENSE) for more information.
 </table>
 
 ### Developers (Last Version)
-- Vatsal Patel
-- Smit Raval
-- Devyash Shah
 - Aastha Gaudani
 - Spencer Kerseyb
 - Charlie Eastin
