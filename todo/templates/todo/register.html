@@ -61,6 +61,18 @@
             box-sizing: border-box;
         }
 
+        .password-container {
+            position: relative;
+        }
+
+        .eye-icon {
+            position: absolute;
+            right: 10px;
+            top: 60%;
+            transform: translateY(-50%);
+            cursor: pointer;
+        }
+
         input.error {
             border-color: #dc3545;
         }
@@ -84,6 +96,16 @@
             padding: 0;
             margin: 10px 0;
             font-size: 0.9rem;
+        }
+
+        .success-message {
+            color: #28a745;
+            background-color: #d4edda;
+            padding: 15px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+            text-align: center;
+            border: 1px solid #28a745;
         }
 
         ul.password-checklist li {
@@ -178,10 +200,25 @@
     <div class="container">
         <h1>Register</h1>
 
+        <!-- Success Message Box (added) -->
+        {% if success_message %}
+        <div class="success-message">
+            {{ success_message }}
+        </div>
+        {% endif %}
+
+        {% if messages %}
+            <ul>
+                {% for message in messages %}
+                    <li>{{ message }}</li>
+                {% endfor %}
+            </ul>
+        {% endif %}
+
         <form method="POST" novalidate onsubmit="return validateForm()">
             {% csrf_token %}
-            
-            <!-- Registration Failed Message placed here -->
+
+            <!-- Registration Failed Message -->
             <div id="registrationFailed" class="registration-failed" style="display: {% if errors.password_mismatch %}block{% else %}none{% endif %};">
                 {{ errors.password_mismatch }}
             </div>
@@ -198,9 +235,10 @@
                 <span class="error-message" id="email-error" style="display: {% if errors.email_exists %}block{% else %}none{% endif %}">{{ errors.email_exists }}</span>
             </div>
 
-            <div class="form-group">
+            <div class="form-group password-container">
                 <label for="id_password1">Password</label>
                 <input type="password" name="password1" id="id_password1" placeholder="Password" class="form-control" oninput="validatePassword()" required>
+                <span class="eye-icon" onclick="togglePasswordVisibility('id_password1')">👁️</span>
                 <ul class="password-checklist" id="passwordChecklist" style="display: none;">
                     <li id="length">At least 8 characters</li>
                     <li id="uppercase">At least one uppercase letter</li>
@@ -208,12 +246,13 @@
                     <li id="number">At least one number</li>
                     <li id="special">At least one special character</li>
                 </ul>
-                <div id="validPasswordMessage">✔️ Valid password format</div>
+                <div id="validPasswordMessage" style="display: none;">✔️ Valid password format</div>
             </div>
 
-            <div class="form-group">
+            <div class="form-group password-container">
                 <label for="id_password2">Confirm Password</label>
                 <input type="password" name="password2" id="id_password2" placeholder="Confirm Password" class="form-control" required oninput="validateConfirmPassword()">
+                <span class="eye-icon" onclick="togglePasswordVisibility('id_password2')">👁️</span>
                 <span id="confirmPasswordError" class="error-message">Passwords do not match.</span>
                 <span id="confirmPasswordValid" class="valid-message">✔️ Password matches.</span>
             </div>
@@ -226,9 +265,14 @@
             <a href="/login" onclick="redirectToLogin(event)">Login here</a>.
         </p>
     </div>
-
     
     <script>
+        function togglePasswordVisibility(fieldId) {
+            const passwordField = document.getElementById(fieldId);
+            const type = passwordField.type === "password" ? "text" : "password";
+            passwordField.type = type;
+        }
+
         function validatePassword() {
             const password = document.getElementById("id_password1").value;
             const checklist = {
@@ -236,51 +280,45 @@
                 uppercase: /[A-Z]/.test(password),
                 lowercase: /[a-z]/.test(password),
                 number: /\d/.test(password),
-                special: /[@$!%*?&]/.test(password),
+                special: /[!@#$%^&*(),.?":{}|<>]/.test(password)
             };
 
-            // Show the checklist once user starts typing
-            document.getElementById("passwordChecklist").style.display = "block";
-
-            // Update the checklist
-            Object.keys(checklist).forEach((key) => {
-                const element = document.getElementById(key);
-                if (checklist[key]) {
+            for (const [id, isValid] of Object.entries(checklist)) {
+                const element = document.getElementById(id);
+                if (isValid) {
                     element.classList.add("valid");
+                    element.classList.remove("invalid");
                 } else {
                     element.classList.remove("valid");
+                    element.classList.add("invalid");
                 }
-            });
+            }
 
-            // If all conditions are met, show the success message and hide checklist
-            if (Object.values(checklist).every(Boolean)) {
-                document.getElementById("validPasswordMessage").style.display = "block";
+            const valid = Object.values(checklist).every((item) => item);
+            document.getElementById("validPasswordMessage").style.display = valid ? "block" : "none";
+
+            if (valid) {
                 document.getElementById("passwordChecklist").style.display = "none";
             } else {
-                document.getElementById("validPasswordMessage").style.display = "none";
+                document.getElementById("passwordChecklist").style.display = "block";
             }
         }
 
         function validateConfirmPassword() {
             const password = document.getElementById("id_password1").value;
             const confirmPassword = document.getElementById("id_password2").value;
-            const errorMessage = document.getElementById("confirmPasswordError");
-            const successMessage = document.getElementById("confirmPasswordValid");
 
-            if (confirmPassword !== password) {
-                errorMessage.style.display = "block";
-                successMessage.style.display = "none";
+            if (password === confirmPassword) {
+                document.getElementById("confirmPasswordError").style.display = "none";
+                document.getElementById("confirmPasswordValid").style.display = "block";
             } else {
-                errorMessage.style.display = "none";
-                successMessage.style.display = "block";
+                document.getElementById("confirmPasswordError").style.display = "block";
+                document.getElementById("confirmPasswordValid").style.display = "none";
             }
         }
 
         function clearErrorMessage(field) {
-            const errorMessage = document.getElementById(field + "-error");
-            if (errorMessage) {
-                errorMessage.style.display = "none";
-            }
+            document.getElementById(`${field}-error`).style.display = "none";
         }
 
         function redirectToLogin(event) {
@@ -289,29 +327,13 @@
         }
 
         function validateForm() {
-            const form = document.querySelector("form");
-            const formData = new FormData(form);
-
-            fetch(form.action, {
-                method: form.method,
-                body: formData,
-                headers: {
-                    "X-Requested-With": "XMLHttpRequest",
-                },
-            })
-                .then((response) => response.json())
-                .then((data) => {
-                    if (data.success) {
-                        alert("User successfully created!");
-                        window.location.href = "/login"; // Redirect to login page
-                    } else {
-                        alert("Something went wrong. Please try again.");
-                    }
-                })
-                .catch((error) => console.error("Error:", error));
-
-            // Prevent default form submission
-            return false;
+            const password1 = document.getElementById("id_password1").value;
+            const password2 = document.getElementById("id_password2").value;
+            if (password1 !== password2) {
+                document.getElementById("registrationFailed").style.display = "block";
+                return false;
+            }
+            return true;
         }
     </script>
 </body>
