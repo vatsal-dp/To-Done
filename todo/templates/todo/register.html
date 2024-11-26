@@ -208,12 +208,20 @@
         {% endif %}
 
         {% if messages %}
-            <ul>
+            <div>
                 {% for message in messages %}
-                    <li>{{ message }}</li>
+                    <p class="success-message">{{ message }}</p>
                 {% endfor %}
-            </ul>
+            </div>
         {% endif %}
+        <!-- {% if errors %}
+            {% for error in errors.values %}
+                <div class="alert alert-danger">
+                    {{ error }}
+                </div>
+            {% endfor %}
+        {% endif %} -->
+
 
         <form method="POST" novalidate onsubmit="return validateForm()">
             {% csrf_token %}

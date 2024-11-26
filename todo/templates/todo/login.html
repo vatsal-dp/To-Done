@@ -87,6 +87,13 @@
     <!-- Login Container -->
     <div class="login-container">
         <h1 class="form-title">Login</h1>
+        {% if messages %}
+            {% for message in messages %}
+                <div class="alert alert-danger">
+                    {{ message }}
+                </div>
+            {% endfor %}
+        {% endif %}
 
         <form method="POST" novalidate onsubmit="return validateForm()">
             {% csrf_token %}
@@ -107,7 +114,7 @@
             <!-- Footer Links -->
             <div class="form-footer">
                 <p><a href="/register">Create an account</a></p>
-                <p><a href="/forgot-password">Forgot your password?</a></p>
+                <p><a href="{% url 'todo:password_reset' %}">Forgot your password?</a></p>
             </div>
         </form>
     </div>
