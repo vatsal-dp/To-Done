@@ -192,7 +192,7 @@
 
         .sidenav {
             height: 100%;
-            width: 250px;
+            width: 350px;
             position: fixed;
             top: 0;
             left: 0;
@@ -201,6 +201,10 @@
             padding-top: 15px;
             margin: 0;
             margin-top: 49px;
+            display: flex; 
+            flex-direction: column; 
+            align-items: center;
+            justify-content: flex-start; 
         }
 
         .sidenav li:hover {
@@ -213,6 +217,8 @@
             font-size: 20px;
             color: #000000;
             display: block;
+            text-align: center; /* Center-align text */
+            width: 90%; /* Symmetric width */
         }
 
         .sidenav a:hover {
@@ -222,7 +228,7 @@
         .sidenav input[type=text] {
             border:none;
             border-radius: 10px;
-            width: 200px;
+            width: 90%;
             margin-left: 10px;
             margin-top: 5px;
             padding: 10px;
@@ -231,50 +237,70 @@
             box-shadow: 1px 1px 5px #555 inset;
             white-space: nowrap;
             display: block;
+            margin: 10px 0;
+        }
+
+        .main {
+            margin: 60px auto; 
+            padding: 20px; 
+            width: 80%; 
+            max-width: 1200px; 
+            background-color: #f9f9f9; 
+            border-radius: 10px; 
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); 
+            text-align: center; 
+            overflow-x: hidden;
         }
 
         .main select {
             border: none;
             border-radius: 10px;
-            width: 75%;
+            width: 70%;
+            max-width: 500px; 
             padding: 10px;
             font-size: 16px;
             box-shadow: 1px 1px 5px #555 inset;
-            white-space: nowrap;
             display: block;
+            margin: 15px auto; 
         }
 
+
         .sidenav div {
-            width: 220px;
+            width: 90%;
             margin-left: 10px;
             padding: 10px;
             float: left;
             font-size: 16px;
+            margin-bottom: 10px;
         }
 
         #listTags {
             border:none;
             border-radius: 10px;
-            margin-left: 10px;
+            /* margin-left: 10px; */
             padding: 10px;
             float: left;
             font-size: 16px;
             box-shadow: 1px 1px 5px #555 inset;
             white-space: nowrap;
             display: block;
+            width: 90%;
+            margin-bottom: 10px;
         }
 
         #newListTag{
             border:none;
             border-radius: 10px;
-            width: 60%;
-            margin-left: 10px;
+            /* width: 60%; */
+            /* margin-left: 10px; */
             padding: 10px;
             float: left;
             font-size: 16px;
             box-shadow: 1px 1px 5px #555 inset;
             white-space: nowrap;
             display: block;
+            width: 90%;
+            margin-bottom: 10px;
         }
 
         .sidenav .addTodoList {
@@ -305,11 +331,35 @@
             display: block;
         }
 
+        .sidenav .metrics {
+            width: 90%; 
+            text-align: center; 
+            margin: 20px 0; 
+            background-color: #f9f9f9; 
+            padding: 15px; 
+            border-radius: 10px; 
+            box-shadow: 1px 1px 5px #ccc; 
+        }
+
+        .sidenav .metrics h3 {
+            margin: 0 0 10px 0; 
+            font-size: 18px;
+            color: #333; 
+        }
+
+        .sidenav .metrics p {
+            margin: 5px 0; 
+            font-size: 16px; 
+            color: #555; 
+        }
+
         .rightsidebar hr {
             height: 2px;
             background-color: #0fa662;
             border: none;
-            width: 87%;
+            /* width: 87%; */
+            width: 90%; 
+            margin: 15px 0; 
         }
 
         .rightsidebar {
@@ -321,31 +371,62 @@
             right: 0;
             background-color: #eee;
             overflow-x: hidden;
-            padding-top: 10px;
-            padding-right: 10px;
+            /* padding-top: 10px;
+            padding-right: 10px; */
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-start;
+            padding: 15px 10px; /* Consistent padding */
+            box-shadow: -1px 0 5px rgba(0, 0, 0, 0.1); /* Subtle shadow for separation */
         }
 
         .rightsidebar a {
-            padding: 6px 8px 6px 16px;
+            /* padding: 6px 8px 6px 16px;
             text-decoration: none;
             font-size: 20px;
             color: #000000;
+            display: block; */
+
+            padding: 10px 0; /* Consistent padding */
+            text-decoration: none;
+            font-size: 18px; /* Slightly smaller for readability */
+            color: #000;
+            text-align: center; /* Center-align text */
+            width: 90%;
             display: block;
+            border-radius: 10px; /* Optional: Rounded background */
+            transition: 0.3s;
         }
 
         .rightsidebar form {
-            padding: 6px 8px 6px 16px;
+            /* padding: 6px 8px 6px 16px;
             text-decoration: none;
             font-size: 20px;
             color: #000000;
-            display: block;
+            display: block; */
+            width: 90%; /* Consistent width */
+            margin: 10px 0; /* Space between forms */
+            text-align: center; /* Center-align content */
+            display: flex;
+            flex-direction: column;
+            align-items: center;
         }
 
         .rightsidebar textarea {
-            width: 325px;
+            /* width: 325px; */
+            width: 90%; /* Symmetric width */
+            height: 100px; /* Fixed height */
+            border-radius: 10px;
+            padding: 10px;
+            font-size: 16px;
+            box-shadow: 1px 1px 5px #555 inset;
+            margin: 10px 0; /* Space above/below */
+            resize: none; /* Prevent resizing */
         }
 
         .rightsidebar .save-button {
+            width: 90%;
             padding: 9px;
             background: #d9d9d9;
             color: #555;
@@ -361,6 +442,48 @@
 
         .rightsidebar .save-button:hover {
             background-color: #bbb;
+        }
+
+        /* Add consistent spacing between the form fields */
+        form .form-group {
+            margin-bottom: 20px; /* Adds spacing between form fields */
+        }
+
+        /* Remove margin from last form group */
+        form .form-group:last-child {
+            margin-bottom: 0;
+        }
+
+        /* Adjust individual form controls */
+        form .form-control {
+            width: 90%; /* Full width */
+            max-width: 500px; /* Maximum width for better layout */
+            padding: 10px;
+            font-size: 16px;
+            margin: 0 auto; /* Centers the form controls */
+            display: block;
+            border-radius: 10px;
+            box-shadow: 1px 1px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Style for select dropdown */
+        form select.form-control {
+            padding: 10px;
+            border-radius: 10px;
+            font-size: 16px;
+        }
+
+        form input[type="color"] {
+            width: 50px; /* Maintain default width for color input */
+            padding: 0; /* Remove padding */
+        }
+
+        /* Optional: Customize label style */
+        form label {
+            font-size: 16px;
+            font-weight: bold;
+            display: block;
+            margin-bottom: 8px; /* Spacing between label and input */
         }
 
     </style>
@@ -433,16 +556,17 @@
             </h2>
             <!-- <input type="text" id="{{ "InputText_"|addstr:list.id }}" placeholder="New Task">
             <span onclick="newElement({{ list.id }})" class="addBtn">Add</span> -->
+            
             <form>
                 <div class="form-group">
-                  <label for="{{ "InputText_"|addstr:list.id }}">New Task</label>
-                  <input type="text" class="form-control" id="{{ "InputText_"|addstr:list.id }}">
+                <label for="{{ "InputText_"|addstr:list.id }}">New Task</label>
+                <input type="text" class="form-control" id="{{ "InputText_"|addstr:list.id }}">
                 </div>
                 <div class="form-group">
-                  <label for="{{ "InputDue_"|addstr:list.id }}">Due Date</label>
-                  <input type="datetime-local" class="form-control" id="{{ "InputDue_"|addstr:list.id }}">
+                <label for="{{ "InputDue_"|addstr:list.id }}">Due Date</label>
+                <input type="datetime-local" class="form-control" id="{{ "InputDue_"|addstr:list.id }}">
                 </div>
-		        <div class="form-group">
+                <div class="form-group">
                     <label for="{{ "InputColor_"|addstr:list.id }}">Color Tag</label>
                     <input type="color" class="form-control" id="{{ "InputColor_"|addstr:list.id }}" value="#f9f9f9">
                 </div>
@@ -455,6 +579,7 @@
                     </select>
                 </div>
             </form>
+            
             <div>
                 <span onclick="newElement({{ list.id }})" class="addBtn">Add</span>
             </div>
@@ -490,6 +615,7 @@
         <input type="hidden" name="todo" id="todo-{{ list.id }}" value="{{ list.id }}">
         <button class="add-template-button" onclick="">Save As Template</button>
     </form>
+
     <form action="/delete-todo" method="post">
         {% csrf_token %}
         <input type="hidden" name="todo" id="delete-todo-{{ list.id }}" value="{{ list.id }}">
