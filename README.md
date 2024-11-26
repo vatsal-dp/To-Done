@@ -8,7 +8,7 @@ x<p align="center">
 [![license badge](https://img.shields.io/badge/License-MIT-green.svg)](https://github.com/CSC510-Team-57/To-Done/blob/main/LICENSE)
 [![Python 3.8](https://img.shields.io/badge/python-3.8-blue.svg)](https://www.python.org/downloads/release/python-380/)
 [![Django 4.1](https://img.shields.io/badge/django-4.1-blue.svg)](https://docs.djangoproject.com/en/4.1/releases/4.1/)
-[![DOI](https://zenodo.org/badge/878680678.svg)](https://doi.org/10.5281/zenodo.14016079)
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.14226147.svg)](https://doi.org/10.5281/zenodo.14226147)
 
 # TO-DONE
 
