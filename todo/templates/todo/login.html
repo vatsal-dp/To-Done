@@ -35,9 +35,19 @@
         }
         .btn-custom {
             width: 100%;
+            margin-top: 0;  /* Reset margin-top to 0 to place the button back to its original position */
         }
+
         .alert {
             margin-top: 10px;
+        }
+        .alert-success {
+            background-color: #28a745; /* Green */
+            color: white;
+        }
+        .alert-danger {
+            background-color: #dc3545; /* Red */
+            color: white;
         }
         .text-center a {
             color: #007bff;
@@ -46,6 +56,26 @@
         .text-center a:hover {
             text-decoration: underline;
         }
+
+        .password-container {
+            position: relative;
+            margin-bottom: 20px; /* Added margin-bottom to space out from the login button */
+        }
+
+        .eye-icon {
+            position: absolute;
+            right: 10px;
+            top: 70%;  /* Adjusted to move the eye a little down */
+            transform: translateY(-50%);
+            cursor: pointer;
+        }
+
+
+        .form-footer {
+            text-align: center;
+            margin-top: 15px;
+        }
+
     </style>
 </head>
 <body>
@@ -57,45 +87,36 @@
     <!-- Login Container -->
     <div class="login-container">
         <h1 class="form-title">Login</h1>
-        
-        <!-- Display the invalid username/password message -->
-        {% if form.non_field_errors %}
-            <div class="alert alert-danger">
-                Invalid username or password.
-            </div>
-        {% endif %}
 
-        <!-- Load crispy forms -->
-        {% load crispy_forms_tags %}
-        
-        <!-- Login Form -->
-        <form method="post">
+        <form method="POST" novalidate onsubmit="return validateForm()">
             {% csrf_token %}
-            {{ login_form|crispy }}
-            <button type="submit" class="btn btn-primary btn-custom">Login</button>
-        </form>
+            
+            <div class="form-group">
+                <label for="id_username">Username</label>
+                <input type="text" name="username" id="id_username" placeholder="Username" class="form-control" required>
+            </div>
 
-        <!-- Additional Links -->
-        <p class="text-center">
-            <a href="{% url 'todo:register' %}">Create an account</a>
-        </p>
-        <p class="text-center">
-            <a href="{% url 'todo:password_reset' %}">Forgot your password?</a>
-        </p>
+            <div class="form-group password-container">
+                <label for="id_password">Password</label>
+                <input type="password" name="password" id="id_password" placeholder="Password" class="form-control" required>
+                <span class="eye-icon" onclick="togglePasswordVisibility('id_password')">👁️</span>
+            </div>
+
+            <button type="submit" class="btn btn-primary btn-custom">Login</button>
+
+            <!-- Footer Links -->
+            <div class="form-footer">
+                <p><a href="/register">Create an account</a></p>
+                <p><a href="/forgot-password">Forgot your password?</a></p>
+            </div>
+        </form>
     </div>
 
-    <!-- Bootstrap JS (optional, for interactivity) -->
-    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.4.4/dist/umd/popper.min.js"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-
-    <!-- Clear form fields after invalid login -->
     <script>
-        window.onload = function() {
-            {% if form.non_field_errors %}
-                const form = document.querySelector('form');
-                form.reset();  // This will clear the form fields
-            {% endif %}
+        function togglePasswordVisibility(fieldId) {
+            const passwordField = document.getElementById(fieldId);
+            const type = passwordField.type === "password" ? "text" : "password";
+            passwordField.type = type;
         }
     </script>
 </body>
