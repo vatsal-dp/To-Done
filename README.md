@@ -59,22 +59,26 @@ We wanted to work on something that is:
 - [Add Reminder Message to task completed](#due-date-color-tags)
 - [Customized Color Tag](#due-date-color-tags)
 - [Add Tags To Todo Lists For Customizable Grouping](#customizable-grouping-tags)
-
-### New Features
-
 - [Notifications](#notifications)
 - [On-time metrics](#on-time-metrics)
 - [Tasks sorted by due date](#tasks-sorted-by-due-date)
 - [Dark Mode](#dark-mode)
 - [Priority Tracker](#priority)
 
+### New Features
+
+- [Fixed Daylight saving time](#fixed-daylight-saving-time)
+- [Email Notification](#email-notification)
+- [Add list in Google Calendar](#add-list-in-google-calendar)
+- [Shared Lists](#shared-list)
+- [UI Improvements](#ui-improvements)
+
 ### Upcoming Features
 
-- Social login
-- Default templates
-- Export and import to-do lists
-- Gamification - earn points by finishing your tasks, show-off your productivity in social media
-- [List of All Planned Features for Second Phase](https://github.com/users/shahleon/projects/2/views/6)
+- Containerization
+- User Authentication via OTP
+- Progress Tracking
+- Mobile App Browser Extension
 
 ### Quick Start
 
