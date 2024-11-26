@@ -32,6 +32,50 @@ from django.core.mail import EmailMessage
 # Import for notifications
 from webpush import send_user_notification
 
+import datetime
+import os.path
+
+from google.auth.transport.requests import Request
+from google.oauth2.credentials import Credentials
+from google_auth_oauthlib.flow import InstalledAppFlow
+from googleapiclient.discovery import build
+from googleapiclient.errors import HttpError
+from http.server import HTTPServer, BaseHTTPRequestHandler
+
+
+# If modifying these scopes, delete the file token.json.
+SCOPES = ["https://www.googleapis.com/auth/calendar"]
+
+
+def cal_service():
+  """Shows basic usage of the Google Calendar API.
+  Prints the start and name of the next 10 events on the user's calendar.
+  """
+  creds = None
+  # The file token.json stores the user's access and refresh tokens, and is
+  # created automatically when the authorization flow completes for the first
+  # time.
+  if os.path.exists("token.json"):
+    creds = Credentials.from_authorized_user_file("token.json", SCOPES)
+  # If there are no (valid) credentials available, let the user log in.
+  if not creds or not creds.valid:
+    if creds and creds.expired and creds.refresh_token:
+      creds.refresh(Request())
+    else:
+      flow = InstalledAppFlow.from_client_secrets_file(
+        #   "/home/devyash/Downloads/NCSU/SE/last project/To-Done/todo/cred.json", SCOPES
+          "/Users/vatsaldp/Desktop/To-Done/todo/cred.json", SCOPES
+      )
+      creds = flow.run_local_server(port=8002)
+    # Save the credentials for the next run
+    with open("token.json", "w") as token:
+      token.write(creds.to_json())
+
+  try:
+    return build("calendar", "v3", credentials=creds)
+
+  except HttpError as error:
+    print(f"An error occurred: {error}")
 
 # Render the home page with users' to-do lists
 def index(request, list_id=0):
@@ -304,6 +348,39 @@ def addNewListItem(request):
                 .astimezone(eastern)
             )
 
+            cot_cal = create_on_time - datetime.timedelta(hours=5)
+            ddot_cal = due_date_on_time - datetime.timedelta(hours=5)
+
+
+            event = {
+                'summary': item_name,
+                # 'location': '800 Howard St., San Francisco, CA 94103',
+                # 'description': 'A chance to hear more about Google\'s developer products.',
+                'start': {
+                    'dateTime': cot_cal.isoformat(),
+                    'timeZone': 'America/New_York',
+                },
+                'end': {
+                    'dateTime': ddot_cal.isoformat(),
+                    'timeZone': 'America/New_York',
+                },
+                # 'recurrence': [
+                #     'RRULE:FREQ=DAILY;COUNT=2'
+                # ],
+                # 'attendees': [
+                #     {'email': 'lpage@example.com'},
+                #     {'email': 'sbrin@example.com'},
+                # ],
+                'reminders': {
+                    'useDefault': False,
+                    'overrides': [
+                    {'method': 'email', 'minutes': 30},
+                    {'method': 'popup', 'minutes': 10},
+                    ],
+                },
+                }
+            
+
             # Create and save the new todo list item
             with transaction.atomic():
                 todo_list_item = ListItem(
@@ -320,6 +397,10 @@ def addNewListItem(request):
                 todo_list_item.save()
                 result_item_id = todo_list_item.id
                 
+            service = cal_service()
+            event = service.events().insert(calendarId='primary', body=event).execute()
+            print('Event created: %s' % (event.get('htmlLink')))
+
             return JsonResponse({'item_id': result_item_id})
 
         except json.JSONDecodeError:
