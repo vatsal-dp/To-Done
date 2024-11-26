@@ -19,9 +19,9 @@ you can access your todolist on the go. Use our rich library of templates to cre
 
 https://user-images.githubusercontent.com/23623764/205810552-556e0449-3f81-4e55-ad9a-414de9731b15.mp4
 
-### Watch this video to know more about the original TO-DONE
+### Watch this video to know more about the TO-DONE
 
-<img src="img/todone-create-list.gif" width="1200" height="500" />
+https://github.com/user-attachments/assets/85536889-977e-4303-90bf-854530edb9c9
 
 # Contents
 
