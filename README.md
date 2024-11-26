@@ -17,11 +17,11 @@ you can access your todolist on the go. Use our rich library of templates to cre
 
 ### Watch this video to know more about TO-DONE 4.0
 
-https://user-images.githubusercontent.com/23623764/205810552-556e0449-3f81-4e55-ad9a-414de9731b15.mp4
-
-### Watch this video to know more about the TO-DONE
-
 https://github.com/user-attachments/assets/85536889-977e-4303-90bf-854530edb9c9
+
+### Previous Version of TO-DONE
+
+https://user-images.githubusercontent.com/23623764/205810552-556e0449-3f81-4e55-ad9a-414de9731b15.mp4
 
 # Contents
 
