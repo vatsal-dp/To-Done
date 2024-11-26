@@ -7,32 +7,34 @@
             font-family: Calibri, Helvetica, sans-serif;
             margin: 0;
         }
-/* Dark Mode Button Styles */
-    #theme-toggle {
-        padding: 8px 16px;
-        border: none;
-        border-radius: 12px;
-        background-color: #f5e79e;
-        color: #333;
-        font-size: 16px;
-        font-weight: bold;
-        cursor: pointer;
-        transition: background-color 0.3s ease, color 0.3s ease, transform 0.2s ease;
-        box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.2);
-        margin-right: 10px
-    }
 
-    /* Hover and Active Effects for the Button */
-    #theme-toggle:hover {
-        background-color: #e9db8e;
-        color: #0fa662;
-        transform: scale(1.05);
-    }
+        /* Dark Mode Button Styles */
+        #theme-toggle {
+            padding: 8px 16px;
+            border: none;
+            border-radius: 12px;
+            background-color: #f5e79e;
+            color: #333;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background-color 0.3s ease, color 0.3s ease, transform 0.2s ease;
+            box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.2);
+            margin-right: 10px;
+        }
 
-    #theme-toggle:active {
-        background-color: #d6c27a;
-        box-shadow: inset 2px 2px 5px rgba(0, 0, 0, 0.3);
-    }               
+        /* Hover and Active Effects for the Button */
+        #theme-toggle:hover {
+            background-color: #e9db8e;
+            color: #0fa662;
+            transform: scale(1.05);
+        }
+
+        #theme-toggle:active {
+            background-color: #d6c27a;
+            box-shadow: inset 2px 2px 5px rgba(0, 0, 0, 0.3);
+        }
+
         /* Dark mode styles */
         body.dark-mode {
             background-color: #121212;
@@ -96,6 +98,7 @@
             border-radius: 10px;
             box-shadow: 1px 1px 5px #555 inset;
         }
+
         /* Target all labels or spans that contain 'Due:' 
         /* Target the due date text inside task list items */
         .main ul li label[for*="due"], /* If due date is inside a label */
@@ -103,7 +106,6 @@
         .main ul li .due-date-label {   /* Use this if there’s a class applied to 'Due' date labels */
             color: #0fa662; /* Set the due date text to green */
         }
-
 
         /* Style the "x" button (close) to have the same green color */
         .main ul li .close {
@@ -143,15 +145,17 @@
             padding-left: 0;
         }
 
+        /* Topbar */
         .topbar {
             overflow: hidden;
-            background-color: #0fa662;
+            background-color: #007bff; /* Changed to blue */
             position: fixed;
             width: 100%;
             top: 0;
             z-index: 1;
         }
 
+        /* Topbar Links */
         .topbar a {
             float: left;
             color: white;
@@ -162,10 +166,16 @@
             padding: 10px;
         }
 
-        /* Change the color of links on hover */
+        /* Hover effect on navbar links */
         .topbar li a.tabs:hover {
-          color: #ccc;
+            color: #ccc;
         }
+
+        /* Hover effect for the topbar when using dark mode */
+        .dark-mode .topbar {
+            background-color: #0056b3; /* Darker blue in dark mode */
+        }
+
 
         .topbar ul {
             margin: 0;
@@ -194,7 +204,7 @@
         }
 
         .sidenav li:hover {
-          background: #ddd;
+            background: #ddd;
         }
 
         .sidenav a {
@@ -210,17 +220,17 @@
         }
 
         .sidenav input[type=text] {
-          border:none;
-          border-radius: 10px;
-          width: 200px;
-          margin-left: 10px;
-          margin-top: 5px;
-          padding: 10px;
-          float: left;
-          font-size: 16px;
-          box-shadow: 1px 1px 5px #555 inset;
-          white-space: nowrap;
-          display: block;
+            border:none;
+            border-radius: 10px;
+            width: 200px;
+            margin-left: 10px;
+            margin-top: 5px;
+            padding: 10px;
+            float: left;
+            font-size: 16px;
+            box-shadow: 1px 1px 5px #555 inset;
+            white-space: nowrap;
+            display: block;
         }
 
         .main select {
@@ -235,24 +245,23 @@
         }
 
         .sidenav div {
-          width: 220px;
-          margin-left: 10px;
-          padding: 10px;
-          float: left;
-          font-size: 16px;
+            width: 220px;
+            margin-left: 10px;
+            padding: 10px;
+            float: left;
+            font-size: 16px;
         }
 
         #listTags {
-          border:none;
-          border-radius: 10px;
-          /* width: 175px; */
-          margin-left: 10px;
-          padding: 10px;
-          float: left;
-          font-size: 16px;
-          box-shadow: 1px 1px 5px #555 inset;
-          white-space: nowrap;
-          display: block;
+            border:none;
+            border-radius: 10px;
+            margin-left: 10px;
+            padding: 10px;
+            float: left;
+            font-size: 16px;
+            box-shadow: 1px 1px 5px #555 inset;
+            white-space: nowrap;
+            display: block;
         }
 
         #newListTag{
@@ -269,22 +278,22 @@
         }
 
         .sidenav .addTodoList {
-          padding: 9px;
-          width: 17%;
-          background: #d9d9d9;
-          color: #555;
-          float: right;
-          margin-top: 5px;
-          text-align: center;
-          font-size: 16px;
-          cursor: pointer;
-          transition: 0.3s;
-          border-radius: 10px;
-          display: block;
+            padding: 9px;
+            width: 17%;
+            background: #d9d9d9;
+            color: #555;
+            float: right;
+            margin-top: 5px;
+            text-align: center;
+            font-size: 16px;
+            cursor: pointer;
+            transition: 0.3s;
+            border-radius: 10px;
+            display: block;
         }
 
         .sidenav .addTodoList:hover {
-          background-color: #bbb;
+            background-color: #bbb;
         }
 
         .sidenav hr {
@@ -314,7 +323,6 @@
             overflow-x: hidden;
             padding-top: 10px;
             padding-right: 10px;
-            {#margin: 0;#}
         }
 
         .rightsidebar a {
@@ -347,237 +355,12 @@
             cursor: pointer;
             transition: 0.3s;
             border-radius: 10px;
-            display: inline-block;
-            border: 0;
+            display: block;
             margin-top: 10px;
         }
 
         .rightsidebar .save-button:hover {
-          background-color: #bbb;
-        }
-
-        .main {
-            margin-left: 250px; /* Same as the width of the sidenav */
-            margin-right: 350px; /* Same as the width of the sidenav */
-            font-size: 20px;
-            padding: 0px 20px;
-            margin-top: 70px;
-        }
-
-        .main h2 a {
-            text-decoration: none;
-            color: #0fa662;
-            display: block;
-            padding-left: 5px;
-        }
-
-        #noListYet {
-            text-decoration: none;
-            color: #0fa662;
-            display: block;
-            align-items: center;
-        }
-
-
-        /* Include the padding and border in an element's total width and height */
-        .main * {
-          box-sizing: border-box;
-        }
-
-        /* Remove margins and padding from the list */
-        .main ul {
-          margin: 0;
-          padding: 0;
-        }
-
-        /* Style the list items */
-        .main ul li {
-          cursor: pointer;
-          position: relative;
-          padding: 12px 8px 12px 40px;
-          list-style-type: none;
-          background: #f9f9f9;
-          font-size: 18px;
-          transition: 0.2s;
-          border-radius: 10px; /* does rounded edges on list items */
-
-          /* make the list items unselectable */
-          -webkit-user-select: none;
-          -moz-user-select: none;
-          -ms-user-select: none;
-          user-select: none;
-        }
-
-        /* Darker background-color on hover */
-        .main ul li:hover {
-          background: #ddd;
-        }
-
-        .main ul li.done {
-          background: #3d3939;
-          color: #fff;
-          text-decoration: line-through;
-        }
-
-        /* Style the close button */
-        .main .close {
-          position: absolute;
-          right: 0;
-          top: 0;
-          padding: 12px 16px 12px 16px;
-          border-radius: 10px;
-        }
-
-        .main .close:hover {
-          background-color: #f44336;
-          color: white;
-        }
-
-        /* Style the header */
-        .main .header {
-          /* color: white; */
-          color: black;
-          display: block;
-        }
-
-        /* Clear floats after the header */
-        .main .header:after {
-          content: "";
-          display: table;
-          clear: both;
-        }
-
-        /* Style the input text*/
-        .main input[type=text] {
-          border: none;
-          border-radius: 10px;
-          width: 75%;
-          padding: 10px;
-          /* float: left; */
-          font-size: 16px;
-          box-shadow: 1px 1px 5px #555 inset;
-          white-space: nowrap;
-          display: block;
-        }
-
-        /* Style the input date*/
-        .main input[type=date] {
-          border: none;
-          border-radius: 10px;
-          width: 75%;
-          padding: 10px;
-          /* float: left; */
-          font-size: 16px;
-          box-shadow: 1px 1px 5px #555 inset;
-          white-space: nowrap;
-          display: block;
-        }
-	
-	    /* Style the input color*/
-        .main input[type=color] {
-          display: block;
-          margin-bottom: 5px;
-        }
-
-        /* Style the input checkbox within unordered list item */
-        .main ul li input[type=checkbox] {
-          position: absolute;
-          left: 2px;
-          top: 12px;
-          width: 20px;
-          height: 20px;
-          padding: 12px 16px 12px 16px;
-          border-radius: 10px;
-        }
-
-        /* Style the "Add" button */
-        .main .addBtn {
-          padding: 9px;
-          width: 25%;
-          background: #d9d9d9;
-          color: #555;
-          float:left;
-          text-align: center;
-          font-size: 16px;
-          cursor: pointer;
-          transition: 0.3s;
-          border-radius: 10px;
-          display: block;
-        }
-
-        .main .addBtn:hover {
-          background-color: #bbb;
-        }
-
-        .main .add-template-button {
-            display: inline-block;
-            cursor: pointer;
-            border-radius: 10px;
-            background: #0fa662;
-            border: 0;
-            font-size: 16px;
-            height: 37px;
-            padding: 0 11px;
-            margin-top: 5px;
-            text-align: center;
-            width: 100%;
-            min-width: 200px;
-            font-weight: 500;
-            color: #f9f9f9;
-        }
-	
-	     /* Style the "customize" button */
-        .main .add-cust-color-button{
-            position: absolute;
-            right: 50px;
-            top: 0;
-            display: inline-block;
-            cursor: pointer;
-            border-radius: 10px;
-            background: #0fa662;
-            color: #f9f9f9;
-            border: 0;
-            font-size: 16px;
-            height: 37px;
-            padding: 0 11px;
-            margin-top: 5px;
-            width: 10%;
-            text-align: center;
-            min-width: 100px;
-            font-weight: 300;
-        }
-
-        .main .add-cust-color-button:hover{
-            background: #0b8f54;
-        }
-
-        .tag-template {
-            display: inline-block;
-            cursor: pointer;
-            border-radius: 10px;
-            border-color: #0fa662;
-            border: 1;
-            font-size: 16px;
-            height: 40px;
-            text-align: center;
-            width: fit-content;
-            font-weight: 500;
-            color: #0fa662;
-        }
-
-        .main .add-template-button:hover{
-            background: #0b8f54;
-        }
-
-        .add-template-button.delete:hover{
-            background: #a81a0f;
-        }
-
-        .shared-list {
-            color: black;
-            font-size: 12px;
-            margin-top: 5px;
-            padding-left: 5px;
+            background-color: #bbb;
         }
 
     </style>
@@ -821,14 +604,19 @@
         </ul>
     {% endif %}
     <script>
+    
     function toggleDarkMode() {
+        // Toggle the dark mode class on the body
         document.body.classList.toggle('dark-mode');
         
-        // Save the user's preference in localStorage
+        // Get the button element
+        const themeButton = document.getElementById('theme-toggle');
+
+        // Check if dark mode is active and update button text accordingly
         if (document.body.classList.contains('dark-mode')) {
-            localStorage.setItem('theme', 'dark');
+            themeButton.innerHTML = '🌞 Light Mode'; // Change text to 'Light Mode' when dark mode is on
         } else {
-            localStorage.setItem('theme', 'light');
+            themeButton.innerHTML = '🌙 Dark Mode'; // Change text to 'Dark Mode' when dark mode is off
         }
     }
 
