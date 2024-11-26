@@ -1,13 +1,13 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
+  <head>
     <style>
-        body {
-            font-family: Calibri, Helvetica, sans-serif;
-            margin: 0;
-        }
-/* Dark Mode Button Styles */
-    #theme-toggle {
+      body {
+        font-family: Calibri, Helvetica, sans-serif;
+        margin: 0;
+      }
+      /* Dark Mode Button Styles */
+      #theme-toggle {
         padding: 8px 16px;
         border: none;
         border-radius: 12px;
@@ -16,440 +16,449 @@
         font-size: 16px;
         font-weight: bold;
         cursor: pointer;
-        transition: background-color 0.3s ease, color 0.3s ease, transform 0.2s ease;
+        transition: background-color 0.3s ease, color 0.3s ease,
+          transform 0.2s ease;
         box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.2);
-    }
+      }
 
-    /* Hover and Active Effects for the Button */
-    #theme-toggle:hover {
+      /* Hover and Active Effects for the Button */
+      #theme-toggle:hover {
         background-color: #e9db8e;
         color: #0fa662;
         transform: scale(1.05);
-    }
+      }
 
-    #theme-toggle:active {
+      #theme-toggle:active {
         background-color: #d6c27a;
         box-shadow: inset 2px 2px 5px rgba(0, 0, 0, 0.3);
-    }               
-        /* Dark mode styles */
-        body.dark-mode {
-            background-color: #121212;
-            color: white;
-        }
+      }
+      /* Dark mode styles */
+      body.dark-mode {
+        background-color: #121212;
+        color: white;
+      }
 
-        /* Topbar dark mode */
-        .dark-mode .topbar {
-            background-color: #1f1f1f;
-        }
+      /* Topbar dark mode */
+      .dark-mode .topbar {
+        background-color: #1f1f1f;
+      }
 
-        /* Sidenav and rightsidebar dark mode */
-        .dark-mode .sidenav, 
-        .dark-mode .rightsidebar {
-            background-color: #333;
-        }
+      /* Sidenav and rightsidebar dark mode */
+      .dark-mode .sidenav,
+      .dark-mode .rightsidebar {
+        background-color: #333;
+      }
 
-        /* Links in dark mode */
-        .dark-mode .sidenav a, 
-        .dark-mode .rightsidebar a {
-            color: #ccc;
-        }
+      /* Links in dark mode */
+      .dark-mode .sidenav a,
+      .dark-mode .rightsidebar a {
+        color: #ccc;
+      }
 
-        .dark-mode .sidenav a:hover {
-            color: #0fa662;
-        }
+      .dark-mode .sidenav a:hover {
+        color: #0fa662;
+      }
 
-        /* Make list items readable in dark mode */
-        .dark-mode .main ul li {
-            background-color: #444;
-            color: white;
-        }
+      /* Make list items readable in dark mode */
+      .dark-mode .main ul li {
+        background-color: #444;
+        color: white;
+      }
 
-        /* Button styles in dark mode */
-        .dark-mode .add-template-button {
-            background-color: #333;
-            color: white;
-        }
+      /* Button styles in dark mode */
+      .dark-mode .add-template-button {
+        background-color: #333;
+        color: white;
+      }
 
-        .dark-mode .add-template-button:hover {
-            background-color: #555;
-        }
+      .dark-mode .add-template-button:hover {
+        background-color: #555;
+      }
 
-        /* Ensure all general text in dark mode is readable */
-        .dark-mode h2, 
-        .dark-mode p, 
-        .dark-mode label, 
-        .dark-mode a {
-            color: #0fa662;
-        }
+      /* Ensure all general text in dark mode is readable */
+      .dark-mode h2,
+      .dark-mode p,
+      .dark-mode label,
+      .dark-mode a {
+        color: #0fa662;
+      }
 
-        /* Style form input fields with a pale yellow background in dark mode */
-        .dark-mode input[type=text], 
-        .dark-mode input[type=password], 
-        .dark-mode input[type=email], 
-        .dark-mode input[type=date], 
-        .dark-mode textarea {
-            background-color: #f5e79e; /* Pale yellow */
-            color: black;  /* Keep the text color dark for contrast */
-            border: none;
-            border-radius: 10px;
-            box-shadow: 1px 1px 5px #555 inset;
-        }
-        /* Target all labels or spans that contain 'Due:' 
+      /* Style form input fields with a pale yellow background in dark mode */
+      .dark-mode input[type="text"],
+      .dark-mode input[type="password"],
+      .dark-mode input[type="email"],
+      .dark-mode input[type="date"],
+      .dark-mode textarea {
+        background-color: #f5e79e; /* Pale yellow */
+        color: black; /* Keep the text color dark for contrast */
+        border: none;
+        border-radius: 10px;
+        box-shadow: 1px 1px 5px #555 inset;
+      }
+      /* Target all labels or spans that contain 'Due:' 
         /* Target the due date text inside task list items */
-        .main ul li label[for*="due"], /* If due date is inside a label */
+      .main ul li label[for*="due"], /* If due date is inside a label */
         .main ul li span.due-date,     /* If due date has a class 'due-date' */
-        .main ul li .due-date-label {   /* Use this if there’s a class applied to 'Due' date labels */
-            color: #0fa662; /* Set the due date text to green */
-        }
+        .main ul li .due-date-label {
+        /* Use this if there’s a class applied to 'Due' date labels */
+        color: #0fa662; /* Set the due date text to green */
+      }
 
+      /* Style the "x" button (close) to have the same green color */
+      .main ul li .close {
+        color: #0fa662;
+      }
 
-        /* Style the "x" button (close) to have the same green color */
-        .main ul li .close {
-            color: #0fa662;
-        }
+      /* Optionally change the hover effect of the "x" button */
+      .main ul li .close:hover {
+        background-color: #0b8f54; /* Darker green when hovered */
+        color: white;
+      }
 
-        /* Optionally change the hover effect of the "x" button */
-        .main ul li .close:hover {
-            background-color: #0b8f54; /* Darker green when hovered */
-            color: white;
-        }
+      /* Style form input fields' hover and focus states in dark mode */
+      .dark-mode input[type="text"]:focus,
+      .dark-mode input[type="password"]:focus,
+      .dark-mode input[type="email"]:focus,
+      .dark-mode input[type="date"]:focus,
+      .dark-mode textarea:focus {
+        background-color: #e9db8e; /* Slightly darker pale yellow when focused */
+      }
 
-        /* Style form input fields' hover and focus states in dark mode */
-        .dark-mode input[type=text]:focus, 
-        .dark-mode input[type=password]:focus, 
-        .dark-mode input[type=email]:focus, 
-        .dark-mode input[type=date]:focus, 
-        .dark-mode textarea:focus {
-            background-color: #e9db8e; /* Slightly darker pale yellow when focused */
-        }
+      /* Dark mode for the "Add" button and similar elements */
+      .dark-mode .addBtn,
+      .dark-mode .save-button {
+        background-color: #555;
+        color: white;
+      }
 
-        /* Dark mode for the "Add" button and similar elements */
-        .dark-mode .addBtn, 
-        .dark-mode .save-button {
-            background-color: #555;
-            color: white;
-        }
+      .dark-mode .addBtn:hover,
+      .dark-mode .save-button:hover {
+        background-color: #777;
+      }
+      ul {
+        list-style: none;
+        padding-left: 0;
+      }
 
-        .dark-mode .addBtn:hover, 
-        .dark-mode .save-button:hover {
-            background-color: #777;
-        }
-        ul {
-            list-style: none;
-            padding-left: 0;
-        }
+      .topbar {
+        overflow: hidden;
+        background-color: #0fa662;
+        position: fixed;
+        width: 100%;
+        top: 0;
+        z-index: 1;
+      }
 
-        .topbar {
-            overflow: hidden;
-            background-color: #0fa662;
-            position: fixed;
-            width: 100%;
-            top: 0;
-            z-index: 1;
-        }
+      .topbar a {
+        float: left;
+        color: white;
+        text-align: center;
+        padding-left: 15px;
+        text-decoration: none;
+        font-size: 25px;
+        padding: 10px;
+      }
 
-        .topbar a {
-            float: left;
-            color: white;
-            text-align: center;
-            padding-left: 15px;
-            text-decoration: none;
-            font-size: 25px;
-            padding: 10px;
-        }
+      /* Change the color of links on hover */
+      .topbar a.tabs:hover {
+        color: #ccc;
+      }
 
-        /* Change the color of links on hover */
-        .topbar a.tabs:hover {
-          color: #ccc;
-        }
+      .topbar ul {
+        margin: 0;
+        padding: 0;
+        overflow: hidden;
+        display: inline-block;
+      }
 
-        .topbar ul {
-            margin: 0;
-            padding: 0;
-            overflow: hidden;
-            display: inline-block;
-        }
+      .topbar ul li {
+        display: inline-block;
+        color: #f2f2f2;
+        text-align: center;
+      }
 
-        .topbar ul li {
-            display: inline-block;
-            color: #f2f2f2;
-            text-align: center;
-        }
+      .sidenav {
+        height: 100%;
+        width: 250px;
+        position: fixed;
+        top: 0;
+        left: 0;
+        background-color: #eee;
+        overflow-x: hidden;
+        padding-top: 10px;
+        margin: 0;
+        margin-top: 49px;
+      }
 
-        .sidenav {
-            height: 100%;
-            width: 250px;
-            position: fixed;
-            top: 0;
-            left: 0;
-            background-color: #eee;
-            overflow-x: hidden;
-            padding-top: 10px;
-            margin: 0;
-            margin-top: 49px;
-        }
+      .sidenav li:hover {
+        background: #ddd;
+      }
 
-        .sidenav li:hover {
-          background: #ddd;
-        }
+      .sidenav a {
+        padding: 6px 8px 6px 16px;
+        text-decoration: none;
+        font-size: 20px;
+        color: #000000;
+        display: block;
+      }
 
-        .sidenav a {
-            padding: 6px 8px 6px 16px;
-            text-decoration: none;
-            font-size: 20px;
-            color: #000000;
-            display: block;
-        }
+      .sidenav a:hover {
+        color: #0fa662;
+      }
 
-        .sidenav a:hover {
-            color: #0fa662;
-        }
+      .sidenav input[type="text"] {
+        border: none;
+        border-radius: 10px;
+        width: 60%;
+        margin-left: 10px;
+        padding: 10px;
+        float: left;
+        font-size: 16px;
+        box-shadow: 1px 1px 5px #555 inset;
+        white-space: nowrap;
+        display: block;
+      }
 
-        .sidenav input[type=text] {
-          border:none;
-          border-radius: 10px;
-          width: 60%;
-          margin-left: 10px;
-          padding: 10px;
-          float: left;
-          font-size: 16px;
-          box-shadow: 1px 1px 5px #555 inset;
-          white-space: nowrap;
-          display: block;
-        }
+      .sidenav .addTodoList {
+        padding: 9px;
+        width: 17%;
+        background: #d9d9d9;
+        color: #555;
+        float: left;
+        text-align: center;
+        font-size: 16px;
+        cursor: pointer;
+        transition: 0.3s;
+        border-radius: 10px;
+        display: inline-block;
+      }
 
-        .sidenav .addTodoList {
-          padding: 9px;
-          width: 17%;
-          background: #d9d9d9;
-          color: #555;
-          float: left;
-          text-align: center;
-          font-size: 16px;
-          cursor: pointer;
-          transition: 0.3s;
-          border-radius: 10px;
-          display: inline-block;
-        }
+      .sidenav .addTodoList:hover {
+        background-color: #bbb;
+      }
 
-        .sidenav .addTodoList:hover {
-          background-color: #bbb;
-        }
+      .sidenav hr {
+        margin-top: 50px;
+        height: 2px;
+        background-color: #0fa662;
+        border: none;
+        width: 87%;
+        display: block;
+      }
 
-        .sidenav hr {
-            margin-top: 50px;
-            height: 2px;
-            background-color: #0fa662;
-            border: none;
-            width: 87%;
-            display: block;
-        }
+      .main {
+        margin-left: 250px; /* Same as the width of the sidenav */
+        margin-right: 350px; /* Same as the width of the sidenav */
+        font-size: 20px;
+        padding: 0px 20px;
+        margin-top: 64px;
+      }
 
-        .main {
-            margin-left: 250px; /* Same as the width of the sidenav */
-            margin-right: 350px; /* Same as the width of the sidenav */
-            font-size: 20px;
-            padding: 0px 20px;
-            margin-top: 64px;
-        }
+      .main h2 a {
+        text-decoration: none;
+        color: #0fa662;
+        display: block;
+        padding-left: 3px;
+      }
 
-        .main h2 a {
-            text-decoration: none;
-            color: #0fa662;
-            display: block;
-            padding-left: 3px;
-        }
+      /* Include the padding and border in an element's total width and height */
+      .main * {
+        box-sizing: border-box;
+      }
 
-        /* Include the padding and border in an element's total width and height */
-        .main * {
-          box-sizing: border-box;
-        }
+      /* Remove margins and padding from the list */
+      .main ul {
+        margin: 0;
+        padding: 0;
+      }
 
-        /* Remove margins and padding from the list */
-        .main ul {
-          margin: 0;
-          padding: 0;
-        }
+      /* Style the list items */
+      .main ul li {
+        cursor: pointer;
+        position: relative;
+        padding: 12px 8px 12px 40px;
+        list-style-type: none;
+        background: #f9f9f9;
+        font-size: 18px;
+        transition: 0.2s;
+        border-radius: 10px; /* does rounded edges on list items */
 
-        /* Style the list items */
-        .main ul li {
-          cursor: pointer;
-          position: relative;
-          padding: 12px 8px 12px 40px;
-          list-style-type: none;
-          background: #f9f9f9;
-          font-size: 18px;
-          transition: 0.2s;
-          border-radius: 10px; /* does rounded edges on list items */
+        /* make the list items unselectable */
+        -webkit-user-select: none;
+        -moz-user-select: none;
+        -ms-user-select: none;
+        user-select: none;
+      }
 
-          /* make the list items unselectable */
-          -webkit-user-select: none;
-          -moz-user-select: none;
-          -ms-user-select: none;
-          user-select: none;
-        }
+      /* Darker background-color on hover */
+      .main ul li:hover {
+        background: #ddd;
+      }
 
-        /* Darker background-color on hover */
-        .main ul li:hover {
-          background: #ddd;
-        }
+      .main ul li.done {
+        background: #3d3939;
+        color: #fff;
+        text-decoration: line-through;
+      }
 
-        .main ul li.done {
-          background: #3d3939;
-          color: #fff;
-          text-decoration: line-through;
-        }
+      /* Style the close button */
+      .main .close {
+        position: absolute;
+        right: 0;
+        top: 0;
+        padding: 12px 16px 12px 16px;
+        border-radius: 10px;
+      }
 
-        /* Style the close button */
-        .main .close {
-          position: absolute;
-          right: 0;
-          top: 0;
-          padding: 12px 16px 12px 16px;
-          border-radius: 10px;
-        }
+      .main .close:hover {
+        background-color: #f44336;
+        color: white;
+      }
 
-        .main .close:hover {
-          background-color: #f44336;
-          color: white;
-        }
+      /* Style the header */
+      .main .header {
+        color: white;
+        display: block;
+      }
 
-        /* Style the header */
-        .main .header {
-          color: white;
-          display: block;
-        }
+      /* Clear floats after the header */
+      .main .header:after {
+        content: "";
+        display: table;
+        clear: both;
+      }
 
-        /* Clear floats after the header */
-        .main .header:after {
-          content: "";
-          display: table;
-          clear: both;
-        }
+      #noTempYet {
+        text-decoration: none;
+        color: #0fa662;
+        display: block;
+        align-items: center;
+      }
 
-        #noTempYet {
-            text-decoration: none;
-            color: #0fa662;
-            display: block;
-            align-items: center;
-        }
+      /* Style the input text*/
+      .main input[type="text"] {
+        border: none;
+        border-radius: 10px;
+        width: 75%;
+        padding: 10px;
+        float: left;
+        font-size: 16px;
+        box-shadow: 1px 1px 5px #555 inset;
+        white-space: nowrap;
+        display: block;
+      }
 
-        /* Style the input text*/
-        .main input[type=text] {
-          border: none;
-          border-radius: 10px;
-          width: 75%;
-          padding: 10px;
-          float: left;
-          font-size: 16px;
-          box-shadow: 1px 1px 5px #555 inset;
-          white-space: nowrap;
-          display: block;
-        }
+      /* Style the input checkbox within unordered list item */
+      .main ul li input[type="checkbox"] {
+        position: absolute;
+        left: 2px;
+        top: 12px;
+        width: 20px;
+        height: 20px;
+        padding: 12px 16px 12px 16px;
+        border-radius: 10px;
+      }
 
-        /* Style the input checkbox within unordered list item */
-        .main ul li input[type=checkbox] {
-          position: absolute;
-          left: 2px;
-          top: 12px;
-          width: 20px;
-          height: 20px;
-          padding: 12px 16px 12px 16px;
-          border-radius: 10px;
-        }
+      /* Style the "Add" button */
+      .main .addBtn {
+        padding: 9px;
+        width: 25%;
+        background: #d9d9d9;
+        color: #555;
+        float: left;
+        text-align: center;
+        font-size: 16px;
+        cursor: pointer;
+        transition: 0.3s;
+        border-radius: 10px;
+        display: inline-block;
+      }
 
-        /* Style the "Add" button */
-        .main .addBtn {
-          padding: 9px;
-          width: 25%;
-          background: #d9d9d9;
-          color: #555;
-          float: left;
-          text-align: center;
-          font-size: 16px;
-          cursor: pointer;
-          transition: 0.3s;
-          border-radius: 10px;
-          display: inline-block
-        }
+      .main .addBtn:hover {
+        background-color: #bbb;
+      }
 
-        .main .addBtn:hover {
-          background-color: #bbb;
-        }
+      .add-template-button {
+        display: inline-block;
+        cursor: pointer;
+        border-radius: 10px;
+        background: #0fa662;
+        border: 0;
+        font-size: 16px;
+        height: 37px;
+        padding: 0 11px;
+        margin-top: 5px;
+        text-align: center;
+        width: 100%;
+        min-width: 200px;
+        font-weight: 500;
+        color: #f9f9f9;
+      }
 
-        .add-template-button {
-            display: inline-block;
-            cursor: pointer;
-            border-radius: 10px;
-            background: #0fa662;
-            border: 0;
-            font-size: 16px;
-            height: 37px;
-            padding: 0 11px;
-            margin-top: 5px;
-            text-align: center;
-            width: 100%;
-            min-width: 200px;
-            font-weight: 500;
-            color: #f9f9f9;
-        }
-
-        .add-template-button:hover{
-            background: #0b8f54;
-        }
+      .add-template-button:hover {
+        background: #0b8f54;
+      }
     </style>
-    <meta charset="UTF-8">
+    <meta charset="UTF-8" />
     <title>To-Done</title>
-</head>
-<body>
+  </head>
+  <body>
     {% load todo_extras %}
     <div class="topbar">
-        <ul>
-            <li><a href="/">To-Done</a></li>
-            <li><a class="tabs" href="/todo">Lists</a></li>
-            <li><a class="tabs" href="/templates">Templates</a></li>
-        </ul>
-		<ul style="float: right;">
-		{% if user.is_authenticated %}
-            <li><a href="#">Welcome, {{user.username}}</a></li>
-		  <li><a class="tabs" href="/logout">Logout</a></li>
-		{% else %}
-		  <li><a class="tabs" href="/login">Login</a></li>
-		{% endif %}
-		</ul>
+      <ul>
+        <li><a href="/">To-Done</a></li>
+        <li><a class="tabs" href="/todo">Lists</a></li>
+        <li><a class="tabs" href="/templates">Templates</a></li>
+      </ul>
+      <ul style="float: right">
+        {% if user.is_authenticated %}
+        <!-- <li><a href="#">Welcome, {{user.username}}</a></li> -->
+        <li><a class="tabs" href="/logout">Logout</a></li>
+        {% else %}
+        <li><a class="tabs" href="/login">Login</a></li>
+        {% endif %}
+      </ul>
     </div>
     <ul class="sidenav">
-        {% for template in templates %}
-            <li><a href="/templates/{{ template.id }}">{{ template.title_text }}</a></li>
-        {% endfor %}
+      {% for template in templates %}
+      <li>
+        <a href="/templates/{{ template.id }}">{{ template.title_text }}</a>
+      </li>
+      {% endfor %}
     </ul>
     <div class="main">
-        {% for template in templates %}
-            <h2><a href="/templates/{{ template.id }}">{{ template.title_text }}</a></h2>
-            <ul id="myUL">
-                {% if template.id|slice:":11" == "predefined_" %}
+      {% for template in templates %}
+      <h2>
+        <a href="/templates/{{ template.id }}">{{ template.title_text }}</a>
+      </h2>
+      <ul id="myUL">
+        {% if template.id|slice:":11" == "predefined_" %}
 
-                    <!-- Handle predefined templates -->
-                    {% for item in template.items %}
-                        <li>{{ item }}</li>
-                    {% endfor %}
-                {% else %}
-                    <!-- Handle user-saved templates -->
-                    {% for template_item in template.templateitem_set.all %}
-                        <li>{{ template_item }}</li>
-                    {% endfor %}
-                {% endif %}
-                <form action="/todo/new-from-template" method="post">
-                    {% csrf_token %}
-                    <input type="hidden" name="template" id="template-{{ template.id }}" value="{{ template.id }}">
-                    <button class="add-template-button">Create Todo Using This Template</button>
-                </form>
-            </ul>
-        {% empty %}
-        <h2 id="noTempYet">You don't have any template!</h2>
-        {% endfor %}
+        <!-- Handle predefined templates -->
+        {% for item in template.items %}
+        <li>{{ item }}</li>
+        {% endfor %} {% else %}
+        <!-- Handle user-saved templates -->
+        {% for template_item in template.templateitem_set.all %}
+        <li>{{ template_item }}</li>
+        {% endfor %} {% endif %}
+        <form action="/todo/new-from-template" method="post">
+          {% csrf_token %}
+          <input
+            type="hidden"
+            name="template"
+            id="template-{{ template.id }}"
+            value="{{ template.id }}"
+          />
+          <button class="add-template-button">
+            Create Todo Using This Template
+          </button>
+        </form>
+      </ul>
+      {% empty %}
+      <h2 id="noTempYet">You don't have any template!</h2>
+      {% endfor %}
     </div>
-
 
     <!-- <div class="main">
         {% for template in templates %}
@@ -468,26 +477,24 @@
         <h2 id="noTempYet">You don't have any template!</h2>
         {% endfor %}
     </div> -->
-</body>
-<script>
-
+  </body>
+  <script>
     function toggleDarkMode() {
-        document.body.classList.toggle('dark-mode');
-        
-        // Save the user's preference in localStorage
-        if (document.body.classList.contains('dark-mode')) {
-            localStorage.setItem('theme', 'dark');
-        } else {
-            localStorage.setItem('theme', 'light');
-        }
+      document.body.classList.toggle("dark-mode");
+
+      // Save the user's preference in localStorage
+      if (document.body.classList.contains("dark-mode")) {
+        localStorage.setItem("theme", "dark");
+      } else {
+        localStorage.setItem("theme", "light");
+      }
     }
 
     // Load the user's preference from localStorage when the page loads
-    window.onload = function() {
-        if (localStorage.getItem('theme') === 'dark') {
-            document.body.classList.add('dark-mode');
-        }
-    }
-</script>
-
+    window.onload = function () {
+      if (localStorage.getItem("theme") === "dark") {
+        document.body.classList.add("dark-mode");
+      }
+    };
+  </script>
 </html>

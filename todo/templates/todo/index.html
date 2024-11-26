@@ -600,7 +600,7 @@
 
 		<ul style="float: right;display: flex;align-items: center">
 		{% if user.is_authenticated %}
-            <li><a href="#">Welcome, {{user.username}}</a></li>
+            <!-- <li><a href="#">Welcome, {{user.username}}</a></li> -->
 		  <li><a class="tabs" href="/logout">Logout</a></li>
 		{% else %}
 		  <li><a class="tabs" href="/login">Login</a></li>
