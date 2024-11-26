@@ -5,7 +5,7 @@ EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 ALLOWED_HOSTS = ['*']
 
 INSTALLED_APPS = [
-    # other installed apps
+    'myapp',
     'crispy_forms',  # Ensure crispy_forms is listed here
     'crispy_bootstrap4',  # Add this if you're using the Bootstrap 4 template pack
 ]

@@ -555,48 +555,140 @@ def checkForNotifications(request):
     except TypeError:
         return JsonResponse(status=500, data={"message": "An error occurred"})
 
-# Register a new user account
-def register_request(request):
-    """Register a new user account"""
-    if request.method == "POST":
-        form = NewUserForm(request.POST)
-        if form.is_valid():
-            user = form.save()
-            #print(user)
+from django.shortcuts import render, redirect
+from django.contrib.auth import login
+from django.contrib import messages
+from django.contrib.auth.models import User
+from django import forms
+from django.core.exceptions import ValidationError
+from django.contrib.auth.password_validation import validate_password
+from django.core.validators import validate_email
+from .models import SharedList
+from django.shortcuts import render, redirect
+from django.contrib.auth import authenticate, login
+from django.contrib import messages
 
-            # Add a empty list to SharedList table
-            shared_list = SharedList(user=User.objects.get(username=user), shared_list_id="")
-            shared_list.save()
+from django.shortcuts import render, redirect
+from django.contrib.auth import authenticate, login
+from django.contrib import messages
 
-            login(request, user)
-            messages.success(request, "Registration successful." )
-            return redirect("todo:index")
-        messages.error(request, "Unsuccessful registration. Invalid information.")
-    form = NewUserForm()
-    return render(request=request, template_name="todo/register.html",
-                  context={"register_form":form})
+from django.shortcuts import render, redirect
+from django.contrib.auth.forms import AuthenticationForm
+from django.contrib.auth import login, authenticate
+from django.contrib import messages
+from django.shortcuts import render
+from django.contrib.auth.forms import AuthenticationForm
+from django.contrib.auth import authenticate, login
+from django.contrib import messages
+from django.shortcuts import render, redirect
 
-
-# Login a user
 def login_request(request):
     if request.method == "POST":
-        """Login a user"""
         form = AuthenticationForm(request, data=request.POST)
         if form.is_valid():
+            # Check user credentials
             username = form.cleaned_data.get('username')
             password = form.cleaned_data.get('password')
             user = authenticate(username=username, password=password)
-            if user is not None:
-                login(request, user)
-                messages.info(request, f"You are now logged in as {username}.")
-                return redirect("todo:index")
-            else:
-                messages.error(request,"Invalid username or password.")
-        else:
-            messages.error(request,"Invalid username or password.")
-    form = AuthenticationForm()
-    return render(request=request, template_name="todo/login.html", context={"login_form":form})
 
+            if user is not None:
+                # If user is authenticated, log them in
+                login(request, user)
+                messages.success(request, f"Welcome back, {username}!")
+                return redirect("todo:index")  # Redirect to the appropriate page
+            else:
+                # If authentication fails, show custom error message
+                messages.error(request, "Invalid username or password.")
+        else:
+            # If the form is invalid (e.g., empty fields), show custom error message
+            messages.error(request, "Invalid username or password.")
+    else:
+        form = AuthenticationForm()
+
+    return render(request, "todo/login.html", {"login_form": form})
+
+
+class NewUserForm(forms.ModelForm):
+    """Form for user registration with custom validation."""
+    password = forms.CharField(widget=forms.PasswordInput, label="Password")
+    confirm_password = forms.CharField(widget=forms.PasswordInput, label="Confirm Password")
+
+    class Meta:
+        model = User
+        fields = ["username", "email", "password"]
+
+    def clean_email(self):
+        email = self.cleaned_data.get("email")
+        try:
+            validate_email(email)
+        except ValidationError:
+            raise ValidationError("Invalid email format.")
+        return email
+
+    def clean_password(self):
+        password = self.cleaned_data.get("password")
+        validate_password(password)  # Use Django's built-in validators
+        return password
+
+    def clean(self):
+        cleaned_data = super().clean()
+        password = cleaned_data.get("password")
+        confirm_password = cleaned_data.get("confirm_password")
+
+        if password and confirm_password and password != confirm_password:
+            self.add_error("confirm_password", "Passwords do not match.")
+        return cleaned_data
+
+
+from django.contrib.auth.models import User
+from django.shortcuts import render, redirect
+from django.contrib import messages
+
+from django.contrib.auth.models import User
+from django.contrib import messages
+from django.shortcuts import render, redirect
+
+from django.contrib import messages
+from django.shortcuts import render, redirect
+from django.contrib.auth.models import User
+
+def register_request(request):
+    if request.method == 'POST':
+        username = request.POST['username']
+        email = request.POST['email']
+        password1 = request.POST['password1']
+        password2 = request.POST['password2']
+
+        errors = {}
+
+        # Check if username exists
+        if User.objects.filter(username=username).exists():
+            errors['username_exists'] = "Username already exists. Please try a different one."
+
+        # Check if email exists
+        if User.objects.filter(email=email).exists():
+            errors['email_exists'] = "Email already exists. Please try a different one."
+
+        # Check if passwords match
+        if password1 != password2:
+            errors['password_mismatch'] = "Passwords do not match. Please re-enter your passwords."
+
+        # Validate password format
+        if len(password1) < 8 or not any(char.isupper() for char in password1) or not any(char.islower() for char in password1) or not any(char.isdigit() for char in password1) or not any(char in '@$!%*?&' for char in password1):
+            errors['password_invalid'] = "Password must contain at least 8 characters, one uppercase letter, one lowercase letter, one number, and one special character."
+
+        if errors:
+            return render(request, 'todo/register.html', {'errors': errors, 'username': username, 'email': email})
+
+        # If no errors, create the user
+        user = User.objects.create_user(username=username, email=email, password=password1)
+        user.save()
+        messages.success(request, "User successfully registered!")
+        
+        # Redirect to the login page with a success flag
+        return render(request, 'todo/register.html', {'success': True})
+
+    return render(request, 'todo/register.html')
 
 # Logout a user
 def logout_request(request):
