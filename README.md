@@ -86,7 +86,7 @@ We wanted to work on something that is:
 - [Install](https://docs.djangoproject.com/en/4.1/topics/install/) Django 4.1
 - Clone the repository
   ```bash
-   git clone git@github.com:Chloe-Ku/smart-todo.git
+   https://github.com/vatsal-dp/To-Done.git
   ```
 - Update migrations
   ```bash
@@ -98,9 +98,9 @@ We wanted to work on something that is:
   ```
 - Start the app
   ```bash
-   python manage.py runserver 8080
+   python manage.py runserver 8000
   ```
-- Point your browser at localhost:8080 and explore the app
+- Point your browser at localhost:8000 and explore the app
 
 ### Documentation
 
