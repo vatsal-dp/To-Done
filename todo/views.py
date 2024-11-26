@@ -639,18 +639,9 @@ class NewUserForm(forms.ModelForm):
             self.add_error("confirm_password", "Passwords do not match.")
         return cleaned_data
 
-
-from django.contrib.auth.models import User
-from django.shortcuts import render, redirect
-from django.contrib import messages
-
-from django.contrib.auth.models import User
-from django.contrib import messages
-from django.shortcuts import render, redirect
-
-from django.contrib import messages
 from django.shortcuts import render, redirect
 from django.contrib.auth.models import User
+from django.contrib import messages
 
 def register_request(request):
     if request.method == 'POST':
@@ -683,12 +674,16 @@ def register_request(request):
         # If no errors, create the user
         user = User.objects.create_user(username=username, email=email, password=password1)
         user.save()
-        messages.success(request, "User successfully registered!")
-        
-        # Redirect to the login page with a success flag
-        return render(request, 'todo/register.html', {'success': True})
+
+        # Add success message
+        messages.success(request, "Account created successfully!")
+
+        # Pass the success message to the template
+        return render(request, 'todo/register.html')
 
     return render(request, 'todo/register.html')
+
+
 
 # Logout a user
 def logout_request(request):
